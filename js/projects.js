@@ -239,24 +239,7 @@ const PROJECTS = [
       "https://www-ccv.adobe.io/v1/player/ccv/H3Lf29ETnzJ/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
     ]
   },
-  {
-    "id": "proj-014",
-    "title": "Harpreet Singh - 🐯 Cartoon Tiger",
-    "category": "3d-animation",
-    "tags": [
-      "3D Animation",
-      "Maya",
-      "3D"
-    ],
-    "coverImage": "thumbnails/cartoon_tiger.png",
-    "description": "3D CG Artist project showcasing Harpreet Singh - 🐯 Cartoon Tiger.",
-    "client": "Personal Project",
-    "year": "2024",
-    "media": [
-      "thumbnails/cartoon_tiger.png",
-      "https://sketchfab.com/models/54cb703f422840e48766515a5aad0122/embed"
-    ]
-  },
+
   {
     "id": "proj-015",
     "title": "Harpreet Singh - Recent Animation \u2014 Part 1",

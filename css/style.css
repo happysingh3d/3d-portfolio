@@ -439,7 +439,7 @@ body::before {
   position: absolute;
   inset: 0;
   background: linear-gradient(160deg, rgba(0,240,255,0.06) 0%, rgba(0,255,133,0.04) 100%),
-    url("https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=1600&q=60") center/cover no-repeat;
+    url("../thumbnails/animation_01_Q3o3ImhDRtn.png") center/cover no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
