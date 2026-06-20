@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://happysingh3d.github.io/3d-portfolio/sitemap.xml

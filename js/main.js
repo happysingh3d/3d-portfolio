@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initSkillBars();
   initScrollReveal();
   initMobileMenu();
+  initScrollToTop();
+  initImageFallback();
   renderProjects();
 });
 
@@ -155,6 +157,17 @@ function renderProjects() {
       </div>
     `;
     card.addEventListener("click", () => openModal(proj));
+    
+    // Skeleton loading state
+    const frame = card.querySelector(".project-art-frame");
+    frame.classList.add("skeleton-loading");
+    const img = card.querySelector("img");
+    if (img.complete) {
+      frame.classList.remove("skeleton-loading");
+    } else {
+      img.addEventListener("load", () => frame.classList.remove("skeleton-loading"));
+    }
+
     grid.appendChild(card);
   });
 
@@ -385,4 +398,41 @@ function observeReveal() {
 
 function initScrollReveal() {
   observeReveal();
+}
+
+// ─── Scroll to Top Button ──────────────────────────────────────────────────────
+function initScrollToTop() {
+  const btn = document.getElementById("scroll-to-top");
+  if (!btn) return;
+  window.addEventListener("scroll", () => {
+    btn.classList.toggle("show", window.scrollY > 400);
+  }, { passive: true });
+  btn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
+
+// ─── Global Image Fallback Handler ─────────────────────────────────────────────
+function initImageFallback() {
+  window.addEventListener("error", (e) => {
+    if (e.target && e.target.tagName === "IMG") {
+      e.target.style.display = "none";
+      const fallback = document.createElement("div");
+      fallback.className = "img-error-fallback";
+      fallback.innerHTML = `
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: 8px; color: var(--color-text-muted);"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        <span style="font-size: var(--text-xs); color: var(--color-text-muted);">Image unavailable</span>
+      `;
+      fallback.style.display = "flex";
+      fallback.style.flexDirection = "column";
+      fallback.style.alignItems = "center";
+      fallback.style.justifyContent = "center";
+      fallback.style.width = "100%";
+      fallback.style.height = "100%";
+      fallback.style.background = "var(--color-surface-2)";
+      fallback.style.border = "1px dashed var(--color-border)";
+      fallback.style.borderRadius = "var(--radius-md)";
+      e.target.parentNode.appendChild(fallback);
+    }
+  }, true);
 }

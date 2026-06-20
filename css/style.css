@@ -1435,3 +1435,106 @@ footer {
   .hero-cta-row { flex-direction: column; align-items: stretch; }
   .btn-primary, .btn-secondary { text-align: center; justify-content: center; }
 }
+
+/* ─── ADDED REFINEMENTS ─────────────────────────────────────────────────── */
+
+/* Scroll to Top Button */
+.scroll-to-top {
+  position: fixed;
+  bottom: var(--space-8);
+  right: var(--space-8);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: rgba(13, 13, 18, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--color-border-bright);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: all var(--transition-base);
+  z-index: 99;
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.15);
+}
+.scroll-to-top.show {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  transform: translateY(0);
+}
+.scroll-to-top:hover {
+  background: var(--color-primary-dim);
+  color: #fff;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 16px var(--color-primary);
+  transform: translateY(-3px);
+}
+
+/* Mobile Floating Contact CTA */
+.mobile-cta {
+  position: fixed;
+  bottom: var(--space-8);
+  left: var(--space-8);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  color: var(--color-text-inverse);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 15px rgba(0, 255, 133, 0.3);
+  z-index: 99;
+  transition: all var(--transition-base);
+}
+.mobile-cta:hover {
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 0 20px var(--color-secondary);
+}
+
+/* Skeleton Shimmer Loading */
+.skeleton-loading {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-surface-2) !important;
+}
+.skeleton-loading img {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.skeleton-loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.05),
+    transparent
+  );
+  animation: shimmer 1.6s infinite;
+}
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Keyboard Focus Rings */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 4px;
+}
+
+@media (max-width: 640px) {
+  .mobile-cta {
+    display: flex;
+  }
+}
