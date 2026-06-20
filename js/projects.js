@@ -241,19 +241,19 @@ const PROJECTS = [
   },
   {
     "id": "proj-014",
-    "title": "Harpreet Singh - \ud83d\udc2f Cartoon Tiger",
+    "title": "Harpreet Singh - 🐯 Cartoon Tiger",
     "category": "3d-animation",
     "tags": [
       "3D Animation",
       "Maya",
       "3D"
     ],
-    "coverImage": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80",
-    "description": "3D CG Artist project showcasing Harpreet Singh - \ud83d\udc2f Cartoon Tiger.",
+    "coverImage": "thumbnails/cartoon_tiger.png",
+    "description": "3D CG Artist project showcasing Harpreet Singh - 🐯 Cartoon Tiger.",
     "client": "Personal Project",
     "year": "2024",
     "media": [
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&q=80",
+      "thumbnails/cartoon_tiger.png",
       "https://sketchfab.com/models/54cb703f422840e48766515a5aad0122/embed"
     ]
   },
