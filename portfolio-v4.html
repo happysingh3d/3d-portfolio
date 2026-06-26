@@ -1,0 +1,1741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HARPREET SINGH — 3D Artist & AR/VR Specialist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+/* ── RESET ────────────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-track{background:#0A0807;}
+::-webkit-scrollbar-thumb{background:#C9953A;}
+
+/* ── TOKENS ───────────────────────────────────────────── */
+:root{
+  --bg:     #0A0807;
+  --bg2:    #100D08;
+  --bg3:    #181008;
+  --border: #2A1C08;
+  --gold:   #C9953A;
+  --gold-g: rgba(201,149,58,.15);
+  --gold2:  #E8B85F;
+  --amber:  #D4782A;
+  --white:  #F0EDE8;
+  --gray:   #7A6A50;
+  --gray2:  #A89880;
+
+  --font-h: 'Outfit', sans-serif;
+  --font-m: 'Space Mono', monospace;
+  --font-b: 'Inter', sans-serif;
+}
+
+body{
+  background:var(--bg); color:var(--white);
+  font-family:var(--font-b); font-size:16px;
+  overflow-x:hidden; cursor:none;
+}
+
+/* subtle bg grid */
+body::before{
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(rgba(201,149,58,.025) 1px, transparent 1px),
+    linear-gradient(90deg,rgba(201,149,58,.025) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+/* ── CURSOR ───────────────────────────────────────────── */
+#cur{position:fixed;width:6px;height:6px;background:var(--gold);border-radius:50%;
+     pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#cur-r{position:fixed;width:28px;height:28px;border:1px solid rgba(201,149,58,.4);
+       border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);
+       transition:width .2s,height .2s,border-color .2s;}
+
+/* ── PROGRESS ─────────────────────────────────────────── */
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--gold2));
+      z-index:9997;transform-origin:left;transform:scaleX(0);}
+
+/* ── LOADER ───────────────────────────────────────────── */
+#loader{position:fixed;inset:0;background:var(--bg);z-index:9000;
+        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px;
+        transition:opacity .9s,visibility .9s;}
+#loader.out{opacity:0;visibility:hidden;}
+.ld-ring{
+  width:54px;height:54px;border-radius:50%;
+  border:1px solid var(--border);
+  border-top-color:var(--gold);border-right-color:var(--gold2);
+  animation:spin 1.2s linear infinite,scale-in .6s ease forwards;
+  transform:scale(0);
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes scale-in{to{transform:scale(1);}}
+.ld-txt{font-family:var(--font-m);font-size:9px;letter-spacing:.5em;color:var(--gold);
+        opacity:0;animation:fi .4s ease 1s forwards;}
+@keyframes fi{to{opacity:1;}}
+
+/* ── NAV ──────────────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:24px 48px;
+    display:flex;justify-content:space-between;align-items:center;
+    background:linear-gradient(to bottom,rgba(10,8,7,.85),transparent);
+    backdrop-filter:blur(0px); pointer-events:none;}
+.nav-logo{font-family:var(--font-h);font-size:15px;font-weight:700;letter-spacing:.08em;
+          color:var(--white);text-decoration:none;pointer-events:all;}
+.nav-logo span{color:var(--gold);}
+.nav-links{display:flex;gap:36px;pointer-events:all;}
+.nav-links a{font-family:var(--font-m);font-size:9px;letter-spacing:.3em;color:var(--gray);
+             text-decoration:none;transition:color .3s;}
+.nav-links a:hover,.nav-links a.active{color:var(--gold);}
+
+/* ── CORNER TEXT ──────────────────────────────────────── */
+.corner{position:fixed;font-family:var(--font-m);font-size:8px;letter-spacing:.2em;
+        color:var(--border);z-index:200;pointer-events:none;}
+#c-bl{bottom:26px;left:48px;}
+#c-br{bottom:26px;right:48px;}
+
+/* ── CORNER MARKERS ───────────────────────────────────── */
+.mk{position:absolute;width:16px;height:16px;opacity:.3;}
+.mk::before,.mk::after{content:'';position:absolute;background:var(--gold);}
+.mk::before{width:1px;height:12px;left:3px;top:0;}
+.mk::after{width:12px;height:1px;left:0;top:3px;}
+.m-tl{top:56px;left:56px;}
+.m-tr{top:56px;right:56px;transform:scaleX(-1);}
+.m-bl{bottom:56px;left:56px;transform:scaleY(-1);}
+.m-br{bottom:56px;right:56px;transform:scale(-1);}
+
+/* ── HERO ─────────────────────────────────────────────── */
+#hero{position:relative;width:100vw;height:100vh;overflow:hidden;}
+#hero-canvas{position:absolute;inset:0;}
+
+.hero-inner{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  text-align:center;z-index:10;will-change:transform,opacity;
+}
+.hero-eyebrow{
+  font-family:var(--font-m);font-size:10px;letter-spacing:.5em;
+  color:var(--gold);margin-bottom:18px;
+  opacity:0;animation:rise .8s ease 2s forwards;
+}
+.hero-name{
+  font-family:var(--font-h);font-weight:900;
+  font-size:clamp(58px,9.5vw,130px);
+  letter-spacing:.04em;line-height:.95;color:var(--white);
+  opacity:0;animation:rise .9s ease 2.2s forwards;
+}
+.hero-name em{font-style:normal;color:transparent;
+  -webkit-text-stroke:1px rgba(201,149,58,.3);}
+.hero-sub{
+  font-family:var(--font-m);font-size:clamp(8px,1vw,11px);
+  letter-spacing:.45em;color:var(--gray2);margin-top:20px;
+  opacity:0;animation:rise .8s ease 2.5s forwards;
+}
+.hero-cta{
+  display:inline-flex;align-items:center;gap:12px;
+  margin-top:40px;padding:13px 32px;
+  border:1px solid var(--border);color:var(--gray2);
+  font-family:var(--font-m);font-size:9px;letter-spacing:.35em;
+  text-decoration:none;background:transparent;cursor:pointer;
+  transition:all .3s;position:relative;overflow:hidden;
+  opacity:0;animation:rise .8s ease 2.8s forwards;
+}
+.hero-cta::before{content:'';position:absolute;inset:0;
+  background:var(--gold-g);transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.hero-cta:hover{color:var(--white);border-color:var(--gold);}
+.hero-cta:hover::before{transform:scaleX(1);}
+.hero-cta span{position:relative;z-index:1;}
+.hero-dot{width:5px;height:5px;background:var(--gold);border-radius:50%;animation:blink 2s ease infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.2;}}
+
+.sh{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    opacity:0;animation:fi .8s ease 3.2s forwards;}
+.sh span{font-family:var(--font-m);font-size:7px;letter-spacing:.45em;color:var(--border);}
+.sh-bar{width:1px;height:36px;background:linear-gradient(to bottom,var(--gold),transparent);
+        animation:scrollPulse 2.5s ease infinite;}
+@keyframes scrollPulse{0%,100%{opacity:.3;transform:scaleY(.6) translateY(-4px);}
+                        50%{opacity:1;transform:scaleY(1) translateY(4px);}}
+@keyframes rise{from{opacity:0;transform:translateY(18px);}to{opacity:1;transform:none;}}
+
+/* ── FEATURED REEL ────────────────────────────────────── */
+#featured{
+  position:relative;background:var(--bg2);
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  overflow:hidden;
+}
+.feat-label{
+  position:absolute;top:0;left:0;right:0;z-index:10;
+  padding:24px 48px;display:flex;justify-content:space-between;align-items:center;
+  background:linear-gradient(to bottom,rgba(10,8,7,.8),transparent);
+}
+.feat-label-txt{font-family:var(--font-m);font-size:8px;letter-spacing:.4em;color:var(--gold);}
+.feat-label-r{font-family:var(--font-m);font-size:8px;letter-spacing:.3em;color:var(--gray);
+              display:flex;align-items:center;gap:8px;}
+.live-dot{width:6px;height:6px;background:#C9953A;border-radius:50%;animation:blink 2s ease infinite;}
+.feat-video{width:100%;display:block;max-height:580px;object-fit:cover;}
+.feat-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 60%,var(--bg) 100%);
+  pointer-events:none;z-index:5;
+}
+
+/* ── SECTION COMMONS ──────────────────────────────────── */
+section{padding:100px 80px;position:relative;z-index:1;}
+.sec-label{font-family:var(--font-m);font-size:9px;letter-spacing:.45em;color:var(--gold);margin-bottom:12px;}
+.sec-title{font-family:var(--font-h);font-weight:800;font-size:clamp(38px,6vw,82px);
+           letter-spacing:.03em;line-height:1;color:var(--white);}
+.divider{height:1px;background:var(--border);position:relative;z-index:1;}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;
+       border:1px solid var(--border);border-radius:2px;
+       font-family:var(--font-m);font-size:7px;letter-spacing:.25em;color:var(--gray);}
+
+/* ── SCROLL REVEAL ────────────────────────────────────── */
+.reveal{opacity:0;transform:translateY(36px);
+        transition:opacity .9s ease,transform .9s ease;}
+.reveal.from-l{transform:translateX(-40px);}
+.reveal.from-r{transform:translateX(40px);}
+.reveal.vis{opacity:1;transform:none;}
+.stagger>*{opacity:0;transform:translateY(24px);
+           transition:opacity .7s ease,transform .7s ease;}
+.stagger.vis>*:nth-child(1){opacity:1;transform:none;transition-delay:0s;}
+.stagger.vis>*:nth-child(2){opacity:1;transform:none;transition-delay:.1s;}
+.stagger.vis>*:nth-child(3){opacity:1;transform:none;transition-delay:.2s;}
+.stagger.vis>*:nth-child(4){opacity:1;transform:none;transition-delay:.3s;}
+.stagger.vis>*:nth-child(5){opacity:1;transform:none;transition-delay:.4s;}
+.stagger.vis>*:nth-child(6){opacity:1;transform:none;transition-delay:.5s;}
+.stagger.vis>*:nth-child(7){opacity:1;transform:none;transition-delay:.6s;}
+.stagger.vis>*:nth-child(8){opacity:1;transform:none;transition-delay:.7s;}
+
+/* ── ABOUT ────────────────────────────────────────────── */
+#about{display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:start;}
+.about-tag{
+  display:inline-flex;align-items:center;gap:8px;margin-bottom:28px;
+  padding:7px 16px;border:1px solid var(--border);border-left:2px solid var(--gold);
+  font-family:var(--font-m);font-size:8px;letter-spacing:.3em;color:var(--gold);
+}
+.about-bio{font-size:15px;line-height:1.85;color:var(--gray2);margin:32px 0 0;max-width:500px;}
+.about-bio strong{color:var(--white);}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);
+       border:1px solid var(--border);margin-top:44px;}
+.stat{background:var(--bg);padding:24px 20px;transition:background .3s;}
+.stat:hover{background:var(--bg2);}
+.stat-n{font-family:var(--font-h);font-weight:800;font-size:48px;
+        color:var(--gold);line-height:1;}
+.stat-l{font-family:var(--font-m);font-size:8px;letter-spacing:.28em;color:var(--gray);margin-top:5px;}
+
+.about-right{position:sticky;top:100px;}
+#mini-canvas{width:100%;height:320px;display:block;}
+
+.timeline{margin-top:36px;border-left:1px solid var(--border);padding-left:22px;}
+.tl-item{position:relative;margin-bottom:26px;}
+.tl-item::before{content:'';position:absolute;left:-28px;top:6px;
+  width:7px;height:7px;background:var(--bg);border:1px solid var(--gold);border-radius:50%;}
+.tl-yr{font-family:var(--font-m);font-size:8px;letter-spacing:.28em;color:var(--gold);margin-bottom:3px;}
+.tl-role{font-size:14px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.tl-co{font-family:var(--font-m);font-size:8px;letter-spacing:.2em;color:var(--gray);}
+
+/* ════════════════════════════════════════════════════════
+   ── SECTION A: THE CRAFT ─ Modeling & Texturing ────────
+════════════════════════════════════════════════════════ */
+#craft{padding:100px 80px;position:relative;z-index:1;}
+
+.craft-header{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:40px;align-items:end;margin-bottom:60px;
+}
+.craft-desc{
+  font-size:14px;line-height:1.9;color:var(--gray);max-width:400px;
+  font-family:var(--font-b);
+}
+.craft-note{
+  font-family:var(--font-m);font-size:8px;letter-spacing:.2em;
+  color:var(--gold);border-left:2px solid var(--gold);
+  padding-left:14px;line-height:1.9;
+}
+
+/* Image grid — 2 columns */
+.craft-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:3px;
+}
+
+/* individual model card */
+.model-card{
+  position:relative;
+  overflow:hidden;
+  background:var(--bg3);
+  cursor:pointer;
+  aspect-ratio:4/3;
+}
+.model-card.tall{aspect-ratio:3/4;}
+.model-card.wide{grid-column:span 2;aspect-ratio:16/6;}
+
+.model-thumb{
+  width:100%;height:100%;
+  background-size:cover;background-position:center;
+  transition:transform .6s cubic-bezier(.25,.46,.45,.94);
+}
+.model-card:hover .model-thumb{transform:scale(1.04);}
+
+/* gold shimmer on hover */
+.model-card::after{
+  content:'';
+  position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(201,149,58,.06) 60%,transparent 80%);
+  opacity:0;transition:opacity .4s;pointer-events:none;
+}
+.model-card:hover::after{opacity:1;}
+
+/* card overlay with info */
+.model-overlay{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(10,8,7,.95) 0%,rgba(10,8,7,.3) 50%,transparent 100%);
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:24px;
+  opacity:0;transition:opacity .35s ease;
+}
+.model-card:hover .model-overlay{opacity:1;}
+
+.model-cat{
+  font-family:var(--font-m);font-size:7px;letter-spacing:.45em;
+  color:var(--gold);margin-bottom:8px;
+}
+.model-name{
+  font-family:var(--font-h);font-weight:800;font-size:clamp(16px,2vw,24px);
+  letter-spacing:.06em;color:var(--white);line-height:1.1;
+}
+.model-name strong{color:var(--gold);}
+.model-meta{
+  font-family:var(--font-m);font-size:7px;letter-spacing:.25em;
+  color:var(--gray2);margin-top:6px;
+}
+.model-cta{
+  display:inline-flex;align-items:center;gap:8px;
+  margin-top:14px;
+  font-family:var(--font-m);font-size:7px;letter-spacing:.4em;
+  color:var(--gold);border:1px solid rgba(201,149,58,.35);
+  padding:6px 16px;width:fit-content;
+  transition:all .25s;
+}
+.model-card:hover .model-cta{background:rgba(201,149,58,.12);}
+
+/* corner badge */
+.model-badge{
+  position:absolute;top:14px;left:14px;
+  font-family:var(--font-m);font-size:7px;letter-spacing:.3em;
+  color:var(--gray2);background:rgba(10,8,7,.7);
+  border:1px solid var(--border);padding:4px 10px;
+  backdrop-filter:blur(4px);
+}
+
+/* placeholder state */
+.model-card.placeholder .model-thumb{
+  background:repeating-linear-gradient(
+    45deg,var(--bg3) 0%,var(--bg3) 10px,var(--bg2) 10px,var(--bg2) 20px
+  );
+}
+.ph-center{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:10px;
+}
+.ph-icon-lg{font-size:40px;opacity:.1;}
+.ph-label{
+  font-family:var(--font-m);font-size:7px;letter-spacing:.4em;
+  color:var(--gray2);text-align:center;line-height:1.9;
+}
+
+/* ════════════════════════════════════════════════════════
+   ── LIGHTBOX ──────────────────────────────────────────
+════════════════════════════════════════════════════════ */
+#lightbox{
+  position:fixed;inset:0;z-index:8000;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;pointer-events:none;
+  transition:opacity .35s ease;
+}
+#lightbox.open{opacity:1;pointer-events:all;}
+.lb-bg{
+  position:absolute;inset:0;
+  background:rgba(10,8,7,.95);
+  backdrop-filter:blur(10px);
+}
+.lb-close{
+  position:absolute;top:28px;right:36px;
+  font-family:var(--font-m);font-size:18px;color:var(--gray2);
+  background:none;border:1px solid var(--border);
+  width:44px;height:44px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;z-index:1;
+}
+.lb-close:hover{border-color:var(--gold);color:var(--gold);}
+
+.lb-content{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1fr 360px;
+  gap:0;max-width:1200px;width:90%;
+  border:1px solid var(--border);
+  background:var(--bg2);
+  max-height:88vh;overflow:hidden;
+}
+.lb-img-wrap{
+  position:relative;overflow:hidden;
+  background:var(--bg3);
+  min-height:300px;
+}
+.lb-img{
+  width:100%;height:100%;
+  object-fit:contain;
+  display:block;
+  max-height:80vh;
+}
+.lb-img-placeholder{
+  width:100%;height:100%;min-height:460px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;
+  background:repeating-linear-gradient(
+    45deg,var(--bg3) 0%,var(--bg3) 10px,rgba(42,28,8,.4) 10px,rgba(42,28,8,.4) 20px
+  );
+}
+.lb-img-placeholder .ph-icon-lg{font-size:60px;opacity:.08;}
+.lb-img-placeholder .ph-label{font-size:8px;letter-spacing:.4em;color:var(--gray2);}
+
+.lb-info{
+  padding:40px 32px;
+  border-left:1px solid var(--border);
+  display:flex;flex-direction:column;
+  justify-content:center;
+  overflow-y:auto;
+}
+.lb-num{
+  font-family:var(--font-m);font-size:8px;letter-spacing:.45em;
+  color:var(--gold);margin-bottom:20px;
+}
+.lb-cat{
+  font-family:var(--font-m);font-size:7px;letter-spacing:.5em;
+  color:var(--gray2);margin-bottom:10px;
+}
+.lb-title{
+  font-family:var(--font-h);font-weight:900;
+  font-size:clamp(22px,2.5vw,34px);letter-spacing:.05em;
+  color:var(--white);line-height:1.1;margin-bottom:6px;
+}
+.lb-title strong{color:var(--gold);}
+.lb-subtitle{
+  font-family:var(--font-m);font-size:8px;letter-spacing:.28em;
+  color:var(--gray);margin-bottom:24px;
+}
+.lb-desc{
+  font-size:13px;line-height:1.85;color:var(--gray2);
+  border-top:1px solid var(--border);padding-top:20px;margin-bottom:24px;
+}
+.lb-specs{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  border-top:1px solid var(--border);padding-top:20px;
+}
+.lb-spec label{
+  font-family:var(--font-m);font-size:7px;letter-spacing:.3em;
+  color:var(--gray2);display:block;margin-bottom:4px;
+}
+.lb-spec span{
+  font-family:var(--font-m);font-size:10px;color:var(--gold);
+}
+
+.lb-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  z-index:2;display:flex;gap:12px;
+}
+.lb-nav.left{left:16px;}
+.lb-nav.right{right:16px;}
+.lb-arrow{
+  width:40px;height:40px;border:1px solid var(--border);
+  background:rgba(10,8,7,.7);color:var(--gray2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;cursor:pointer;transition:all .2s;
+}
+.lb-arrow:hover{border-color:var(--gold);color:var(--gold);}
+
+/* prev/next label */
+.lb-counter{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  font-family:var(--font-m);font-size:8px;letter-spacing:.4em;
+  color:var(--gray2);z-index:2;
+}
+
+/* ════════════════════════════════════════════════════════
+   ── SECTION B: IN MOTION ─ Rigging / Anim / Lighting ──
+════════════════════════════════════════════════════════ */
+#work-wrap{display:grid;grid-template-columns:1fr 300px;position:relative;z-index:1;}
+
+.work-left{padding:100px 60px 100px 80px;border-right:1px solid var(--border);}
+
+.work-panel{
+  padding:100px 40px;position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  background:var(--bg);border-left:1px solid var(--border);
+}
+.work-desc{font-size:14px;line-height:1.9;color:var(--gray);margin-top:20px;}
+.filters{margin-top:40px;display:flex;flex-direction:column;gap:4px;}
+.fil{
+  font-family:var(--font-m);font-size:8px;letter-spacing:.22em;color:var(--gray);
+  background:none;border:none;border-left:2px solid transparent;
+  padding:7px 0 7px 12px;text-align:left;cursor:pointer;transition:all .3s;
+}
+.fil:hover,.fil.on{color:var(--gold);border-left-color:var(--gold);}
+
+/* project card */
+.project-card{
+  margin-bottom:3px;background:var(--bg2);overflow:hidden;cursor:pointer;
+  transition:transform .4s ease;
+}
+.project-card:hover{transform:translateY(-3px);}
+
+.card-media{
+  width:100%;aspect-ratio:16/7.5;position:relative;overflow:hidden;
+  background:var(--bg3);background-size:cover;background-position:center;
+}
+.card-media iframe{
+  position:absolute;inset:0;width:100%;height:100%;border:none;
+  display:none;
+}
+.card-media iframe.active{display:block;}
+
+/* play overlay */
+.card-play{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+  background:rgba(10,8,7,.45);
+  transition:background .3s,opacity .3s;
+}
+.card-play.gone{opacity:0;pointer-events:none;}
+.project-card:hover .card-play{background:rgba(10,8,7,.62);}
+
+.play-btn{
+  width:60px;height:60px;border:1px solid rgba(201,149,58,.5);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:var(--gold);font-size:18px;padding-left:4px;
+  transition:background .3s,border-color .3s,color .3s,transform .3s;
+}
+.project-card:hover .play-btn{
+  background:var(--gold);border-color:var(--gold);color:var(--bg);transform:scale(1.08);
+}
+.play-lbl{font-family:var(--font-m);font-size:8px;letter-spacing:.38em;color:var(--gold);}
+.media-type-badge{
+  position:absolute;top:14px;right:14px;
+  font-family:var(--font-m);font-size:7px;letter-spacing:.22em;
+  padding:4px 9px;border:1px solid var(--border);
+  background:rgba(10,8,7,.6);color:var(--gray);backdrop-filter:blur(4px);
+}
+
+/* card footer */
+.card-foot{
+  padding:16px 24px;display:flex;align-items:center;
+  justify-content:space-between;border-top:1px solid var(--border);
+}
+.card-cat{font-family:var(--font-m);font-size:8px;letter-spacing:.28em;
+          color:var(--gray);margin-bottom:5px;}
+.card-title{font-family:var(--font-h);font-weight:700;font-size:20px;
+            letter-spacing:.06em;color:var(--white);}
+.card-title-g{color:var(--gold);}
+.card-tags{font-family:var(--font-m);font-size:8px;letter-spacing:.18em;
+           color:var(--border);margin-top:4px;}
+.card-arr{
+  width:32px;height:32px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gray);font-size:14px;flex-shrink:0;
+  transition:background .3s,border-color .3s,color .3s;
+}
+.project-card:hover .card-arr{background:var(--gold);border-color:var(--gold);color:var(--bg);}
+
+/* ── SERIES DIVIDER ───────────────────────────────────── */
+.series-divider{
+  padding:28px 0 16px;display:flex;align-items:center;gap:16px;
+  border-top:1px solid var(--border);margin-top:4px;
+}
+.series-divider:first-child{border-top:none;padding-top:0;}
+.series-label{
+  font-family:var(--font-m);font-size:8px;letter-spacing:.45em;
+  color:var(--gold);white-space:nowrap;
+}
+.series-line{flex:1;height:1px;background:var(--border);}
+.series-count{
+  font-family:var(--font-m);font-size:7px;letter-spacing:.2em;
+  color:var(--gray);white-space:nowrap;
+}
+
+/* ── SKILLS ───────────────────────────────────────────── */
+#skills{background:var(--bg2);text-align:center;}
+.sk-hd{margin-bottom:64px;}
+.tools{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:var(--border);border:1px solid var(--border);
+  max-width:880px;margin:0 auto;
+}
+.tool{background:var(--bg2);padding:28px 16px;display:flex;flex-direction:column;
+      align-items:center;gap:10px;transition:background .3s;}
+.tool:hover{background:var(--bg3);}
+.tool-ico{
+  width:42px;height:42px;border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-h);font-weight:700;font-size:14px;
+  color:var(--gold);transition:border-color .3s;
+}
+.tool:hover .tool-ico{border-color:var(--gold);}
+.tool-n{font-family:var(--font-m);font-size:8px;letter-spacing:.22em;color:var(--gray);}
+
+/* skill bars */
+.sk-bars{max-width:720px;margin:64px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:24px 52px;text-align:left;}
+.sb{--w:0%;}
+.sb-top{display:flex;justify-content:space-between;margin-bottom:8px;}
+.sb-name{font-family:var(--font-m);font-size:8px;letter-spacing:.2em;color:var(--gray2);}
+.sb-val{font-family:var(--font-m);font-size:8px;color:var(--gold);}
+.sb-track{height:1px;background:var(--border);}
+.sb-fill{height:1px;background:linear-gradient(to right,var(--gold),var(--gold2));
+         width:0;transition:width 1.4s cubic-bezier(.25,.46,.45,.94);}
+.sb.vis .sb-fill{width:var(--w);}
+
+/* ── CONTACT ──────────────────────────────────────────── */
+#contact{
+  min-height:78vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  position:relative;overflow:hidden;
+}
+#contact::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(201,149,58,.06) 0%,transparent 70%);
+  pointer-events:none;
+}
+.ct-title{
+  font-family:var(--font-h);font-weight:800;
+  font-size:clamp(32px,6.5vw,88px);letter-spacing:.03em;line-height:1.1;
+  color:var(--white);max-width:860px;margin:20px auto 48px;
+}
+.ct-title em{font-style:normal;color:var(--gold);}
+
+.btn-primary{
+  display:inline-flex;align-items:center;gap:14px;
+  padding:16px 44px;background:var(--gold);color:var(--bg);
+  font-family:var(--font-m);font-size:9px;letter-spacing:.38em;
+  text-decoration:none;border:1px solid var(--gold);
+  transition:background .3s,color .3s;position:relative;overflow:hidden;
+}
+.btn-primary::before{content:'';position:absolute;inset:0;
+  background:var(--bg);transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.btn-primary:hover{color:var(--gold);}
+.btn-primary:hover::before{transform:scaleX(1);}
+.btn-primary span,.btn-primary svg{position:relative;z-index:1;}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:12px;
+  padding:16px 40px;background:transparent;color:var(--gray2);
+  font-family:var(--font-m);font-size:9px;letter-spacing:.38em;
+  text-decoration:none;border:1px solid var(--border);margin-left:12px;
+  transition:all .3s;
+}
+.btn-secondary:hover{color:var(--white);border-color:var(--gray);}
+
+.ct-btns{display:flex;align-items:center;flex-wrap:wrap;justify-content:center;gap:0;}
+.ct-email{font-family:var(--font-m);font-size:9px;letter-spacing:.35em;color:var(--gray);margin-top:28px;}
+.ct-socials{display:flex;gap:24px;margin-top:24px;}
+.ct-socials a{font-family:var(--font-m);font-size:8px;letter-spacing:.25em;color:var(--gray);
+              text-decoration:none;transition:color .3s;}
+.ct-socials a:hover{color:var(--gold);}
+
+/* ── FOOTER ───────────────────────────────────────────── */
+footer{
+  padding:24px 80px;display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--border);position:relative;z-index:1;
+}
+footer span{font-family:var(--font-m);font-size:8px;letter-spacing:.25em;color:var(--border);}
+footer span.hi{color:var(--gray);}
+
+/* ── RESPONSIVE ───────────────────────────────────────── */
+@media(max-width:900px){
+  section,#craft{padding:72px 28px;}
+  #about{grid-template-columns:1fr;}
+  .craft-header{grid-template-columns:1fr;}
+  .craft-grid{grid-template-columns:1fr;}
+  .model-card.wide{grid-column:span 1;aspect-ratio:4/3;}
+  #work-wrap{grid-template-columns:1fr;}
+  .work-panel{position:static;height:auto;}
+  .work-left{padding:60px 28px;}
+  .lb-content{grid-template-columns:1fr;max-height:95vh;overflow-y:auto;}
+  .lb-info{border-left:none;border-top:1px solid var(--border);}
+  footer{padding:20px 28px;flex-direction:column;gap:10px;text-align:center;}
+}
+  </style>
+</head>
+<body>
+
+<!-- Cursor -->
+<div id="cur"></div>
+<div id="cur-r"></div>
+<div id="prog"></div>
+
+<!-- Loader -->
+<div id="loader">
+  <div class="ld-ring"></div>
+  <div class="ld-txt">LOADING</div>
+</div>
+
+<!-- Corner deco -->
+<div class="corner" id="c-bl">_!>[^*_</div>
+<div class="corner" id="c-br">|^°/_|</div>
+
+<!-- Nav -->
+<nav>
+  <a href="#hero" class="nav-logo">HS<span>.</span></a>
+  <div class="nav-links">
+    <a href="#about">ABOUT</a>
+    <a href="#craft">MODELING</a>
+    <a href="#work-wrap">IN MOTION</a>
+    <a href="#skills">SKILLS</a>
+    <a href="#contact">CONTACT</a>
+  </div>
+</nav>
+
+<!-- ══════════ HERO ══════════ -->
+<section id="hero">
+  <canvas id="hero-canvas"></canvas>
+  <div class="mk m-tl"></div><div class="mk m-tr"></div>
+  <div class="mk m-bl"></div><div class="mk m-br"></div>
+
+  <div class="hero-inner" id="hero-inner">
+    <div class="hero-eyebrow">/ 3D ARTIST & AR/VR SPECIALIST</div>
+    <h1 class="hero-name">HARPREET<br><em>SINGH</em></h1>
+    <p class="hero-sub">GAME ASSETS &nbsp;·&nbsp; CHARACTER RIGGING &nbsp;·&nbsp; REAL-TIME RENDERING</p>
+    <a href="#featured" class="hero-cta">
+      <div class="hero-dot"></div>
+      <span>VIEW SHOWREEL</span>
+    </a>
+  </div>
+
+  <div class="sh">
+    <span>SCROLL</span>
+    <div class="sh-bar"></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ FEATURED REEL ══════════ -->
+<div id="featured">
+  <div class="feat-label">
+    <span class="feat-label-txt">/ FEATURED SHOWREEL — 2024</span>
+    <span class="feat-label-r">
+      <span class="live-dot"></span>LATEST WORK
+    </span>
+  </div>
+  <video class="feat-video" autoplay muted loop playsinline
+         src="https://happysingh3d.github.io/3d-portfolio/videos/showcase.mp4">
+  </video>
+  <div class="feat-overlay"></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════ ABOUT ══════════ -->
+<section id="about">
+  <div class="about-left">
+    <div class="about-tag reveal">✦ &nbsp; HARPREET SINGH UPPAL</div>
+    <div class="sec-label reveal">/ 01 — ABOUT ME</div>
+    <h2 class="sec-title reveal">MULTI-<br>DISCIPLINARY<br>3D ARTIST.</h2>
+
+    <p class="about-bio reveal">
+      Based in <strong>Chandigarh, India</strong> with <strong>3+ years of production-level expertise</strong>
+      in game-ready asset creation, PBR texturing, UV unwrapping, low-poly optimization,
+      and real-time rendering for AR/VR/MR environments.
+    </p>
+    <p class="about-bio reveal" style="margin-top:16px;">
+      I work across the full pipeline — from <strong>base mesh & ZBrush sculpting</strong> to
+      <strong>character rigging, animation, and Unity integration</strong>. Led 3D teams, mentored
+      artists, and delivered polished work for international clients.
+    </p>
+
+    <div class="stats stagger">
+      <div class="stat"><div class="stat-n">3+</div><div class="stat-l">YEARS PRODUCTION</div></div>
+      <div class="stat"><div class="stat-n">40+</div><div class="stat-l">PROJECTS DELIVERED</div></div>
+      <div class="stat"><div class="stat-n">8</div><div class="stat-l">SOFTWARE TOOLS</div></div>
+      <div class="stat"><div class="stat-n">8+</div><div class="stat-l">YEARS EXPERIENCE</div></div>
+    </div>
+  </div>
+
+  <div class="about-right">
+    <canvas id="mini-canvas"></canvas>
+    <div class="timeline reveal from-r">
+      <div class="tl-item">
+        <div class="tl-yr">2024 — PRESENT</div>
+        <div class="tl-role">3D Artist (AR/VR/MR)</div>
+        <div class="tl-co">MOHALI, INDIA</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-yr">2023 — 2024</div>
+        <div class="tl-role">Graphic Designer & Video Editor</div>
+        <div class="tl-co">VCAN OVERSEAS CONSULTANTS (VCOC)</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-yr">2021 — 2023</div>
+        <div class="tl-role">Freelance Graphic Designer</div>
+        <div class="tl-co">SELF-EMPLOYED</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-yr">2019 — 2021</div>
+        <div class="tl-role">Game Animator & Team Lead</div>
+        <div class="tl-co">DEFTSOFT, MOHALI</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ THE CRAFT — MODELING & TEXTURING ══════════
+     ─────────────────────────────────────────────────────
+     HOW TO ADD YOUR RENDERS:
+     1. Export a PNG render from Maya / Marmoset / ZBrush
+     2. Host it: GitHub (free), Google Drive (images work fine), Imgur, etc.
+     3. Replace the background-image URL in each .model-card's .model-thumb div
+     4. Fill in: data-title, data-subtitle, data-cat, data-desc, data-software,
+        data-polycount, data-textures, data-software2 on the .model-card
+     5. Done — the lightbox reads those attributes automatically.
+─────────────────────────────────────────────────────── -->
+<div id="craft">
+  <div class="craft-header">
+    <div>
+      <div class="sec-label reveal">/ 02A — MODELING & TEXTURING</div>
+      <h2 class="sec-title reveal">THE<br>CRAFT.</h2>
+    </div>
+    <div>
+      <p class="craft-desc reveal">
+        Game-ready assets built polygon by polygon — from base mesh through ZBrush sculpting,
+        retopology, UV unwrap, and PBR texturing in Substance Painter.
+      </p>
+      <p class="craft-note reveal" style="margin-top:20px;">
+        CLICK ANY IMAGE TO INSPECT<br>
+        WIREFRAMES · TEXTURE MAPS · SPECS
+      </p>
+    </div>
+  </div>
+
+  <!-- ══ IMAGE GRID ══
+       Replace background-image URLs with your own PNG renders.
+       data-* attributes power the lightbox info panel.
+  ══ -->
+  <div class="craft-grid">
+
+    <!-- CARD 1 — featured wide (replace with your best render) -->
+    <div class="model-card wide reveal"
+         data-title="STUARD"
+         data-title-b="CHARACTER"
+         data-num="01 / 06"
+         data-cat="CHARACTER MODELING"
+         data-subtitle="Maya · ZBrush · Substance Painter"
+         data-desc="High-resolution character model built in ZBrush, retopologized in Maya to game-ready polycount. PBR textures created in Substance Painter with albedo, roughness, metallic and normal maps."
+         data-software="Maya · ZBrush · Substance Painter"
+         data-polycount="~18,500 tris"
+         data-textures="4K PBR — Albedo / Normal / Roughness / AO"
+         data-software2="Marmoset Toolbag (render)">
+      <div class="model-thumb"
+           style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/game-showcase-rough-edition_LISIzno5-ft.png');
+                  background-position:center 30%;"></div>
+      <div class="model-badge">FEATURED</div>
+      <div class="model-overlay">
+        <div class="model-cat">CHARACTER MODELING</div>
+        <div class="model-name">STUARD <strong>CHARACTER</strong></div>
+        <div class="model-meta">Maya · ZBrush · Substance Painter · ~18.5K tris</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="model-card reveal"
+         data-title="GAME ASSET"
+         data-title-b="PACK"
+         data-num="02 / 06"
+         data-cat="PROP MODELING"
+         data-subtitle="Maya · Substance Painter"
+         data-desc="Game-ready hard-surface prop pack optimized for real-time rendering. Low-poly meshes with baked normal maps from high-poly source geometry."
+         data-software="Maya · Substance Painter"
+         data-polycount="~6,200 tris avg."
+         data-textures="2K PBR — Albedo / Normal / Roughness"
+         data-software2="Unity (integration)">
+      <div class="model-thumb"
+           style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/game-showcase-rough-edition_LISIzno5-ft.png');"></div>
+      <div class="model-badge">PROPS</div>
+      <div class="model-overlay">
+        <div class="model-cat">PROP MODELING</div>
+        <div class="model-name">GAME ASSET <strong>PACK</strong></div>
+        <div class="model-meta">Maya · Substance Painter · ~6.2K tris</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+
+    <!-- CARD 3 — placeholder (waiting for render) -->
+    <div class="model-card placeholder reveal"
+         data-title="YOUR MODEL"
+         data-title-b="TITLE"
+         data-num="03 / 06"
+         data-cat="MODELING"
+         data-subtitle="Maya · Substance Painter"
+         data-desc="Add your render PNG here. Export from Maya, host on GitHub or Google Drive, paste the URL below."
+         data-software="Maya"
+         data-polycount="—"
+         data-textures="—"
+         data-software2="—">
+      <div class="model-thumb"></div>
+      <div class="ph-center">
+        <div class="ph-icon-lg">🗿</div>
+        <div class="ph-label">REPLACE WITH<br>YOUR RENDER PNG</div>
+      </div>
+      <div class="model-badge">ADD RENDER</div>
+      <div class="model-overlay">
+        <div class="model-cat">MODELING</div>
+        <div class="model-name">YOUR <strong>MODEL</strong></div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+
+    <!-- CARD 4 -->
+    <div class="model-card reveal"
+         data-title="CHARACTER"
+         data-title-b="WIREFRAME"
+         data-num="04 / 06"
+         data-cat="RETOPOLOGY"
+         data-subtitle="ZBrush · Maya"
+         data-desc="Clean edge-flow retopology from high-res ZBrush sculpt. Topology optimized for deformation at joints, ready for rigging and animation."
+         data-software="ZBrush · Maya"
+         data-polycount="~12,000 tris"
+         data-textures="Normal bake from high-poly"
+         data-software2="—">
+      <div class="model-thumb"
+           style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/game-showcase-rough-edition_LISIzno5-ft.png');filter:grayscale(.4);"></div>
+      <div class="model-badge">RETOPOLOGY</div>
+      <div class="model-overlay">
+        <div class="model-cat">RETOPOLOGY</div>
+        <div class="model-name">CHARACTER <strong>WIREFRAME</strong></div>
+        <div class="model-meta">ZBrush → Maya · ~12K tris</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+
+    <!-- CARD 5 — placeholder -->
+    <div class="model-card placeholder reveal"
+         data-title="TEXTURE"
+         data-title-b="BREAKDOWN"
+         data-num="05 / 06"
+         data-cat="TEXTURING"
+         data-subtitle="Substance Painter"
+         data-desc="PBR texture breakdown — albedo, normal, roughness/metallic and AO channels. Add your texture sheet screenshot here."
+         data-software="Substance Painter"
+         data-polycount="—"
+         data-textures="4K PBR Maps"
+         data-software2="—">
+      <div class="model-thumb"></div>
+      <div class="ph-center">
+        <div class="ph-icon-lg">🎨</div>
+        <div class="ph-label">ADD TEXTURE<br>BREAKDOWN RENDER</div>
+      </div>
+      <div class="model-badge">TEXTURING</div>
+      <div class="model-overlay">
+        <div class="model-cat">TEXTURING</div>
+        <div class="model-name">TEXTURE <strong>BREAKDOWN</strong></div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+
+    <!-- CARD 6 — placeholder -->
+    <div class="model-card placeholder reveal"
+         data-title="ENVIRONMENT"
+         data-title-b="ASSET"
+         data-num="06 / 06"
+         data-cat="ENVIRONMENT"
+         data-subtitle="Maya · Substance Painter · Unity"
+         data-desc="Environment asset set optimized for real-time rendering in Unity. LOD setup, lightmap UVs baked for static lighting."
+         data-software="Maya · Unity"
+         data-polycount="—"
+         data-textures="2K PBR Maps + Lightmap"
+         data-software2="Unity (scene integration)">
+      <div class="model-thumb"></div>
+      <div class="ph-center">
+        <div class="ph-icon-lg">🏔️</div>
+        <div class="ph-label">ADD ENVIRONMENT<br>RENDER HERE</div>
+      </div>
+      <div class="model-badge">ENVIRONMENT</div>
+      <div class="model-overlay">
+        <div class="model-cat">ENVIRONMENT</div>
+        <div class="model-name">ENVIRONMENT <strong>ASSET</strong></div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+
+  </div><!-- /craft-grid -->
+</div><!-- /craft -->
+
+<!-- ── LIGHTBOX ──────────────────────────────────────── -->
+<div id="lightbox" role="dialog" aria-modal="true">
+  <div class="lb-bg" id="lb-bg"></div>
+  <button class="lb-close" id="lb-close" title="Close">✕</button>
+  <div class="lb-content">
+    <div class="lb-img-wrap" id="lb-img-wrap">
+      <!-- filled by JS -->
+    </div>
+    <div class="lb-info">
+      <div class="lb-num" id="lb-num"></div>
+      <div class="lb-cat" id="lb-cat"></div>
+      <h3 class="lb-title" id="lb-title"></h3>
+      <div class="lb-subtitle" id="lb-subtitle"></div>
+      <div class="lb-desc" id="lb-desc"></div>
+      <div class="lb-specs">
+        <div class="lb-spec">
+          <label>SOFTWARE</label>
+          <span id="lb-software"></span>
+        </div>
+        <div class="lb-spec">
+          <label>POLYCOUNT</label>
+          <span id="lb-polycount"></span>
+        </div>
+        <div class="lb-spec">
+          <label>TEXTURES</label>
+          <span id="lb-textures"></span>
+        </div>
+        <div class="lb-spec">
+          <label>RENDER / ENGINE</label>
+          <span id="lb-software2"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="lb-nav left">
+    <button class="lb-arrow" id="lb-prev">←</button>
+  </div>
+  <div class="lb-nav right">
+    <button class="lb-arrow" id="lb-next">→</button>
+  </div>
+  <div class="lb-counter" id="lb-counter"></div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ══════════ IN MOTION — RIGGING / SKINNING / ANIMATION / LIGHTING ══════════ -->
+<div id="work-wrap">
+  <div class="work-left">
+    <div class="sec-label reveal">/ 02B — RIGGING · SKINNING · ANIMATION · LIGHTING</div>
+    <h2 class="sec-title reveal" style="margin-bottom:52px;">IN<br>MOTION.</h2>
+
+    <!-- ═══ RIGGING & SKINNING ═══ -->
+    <div class="series-divider">
+      <span class="series-label">RIGGING & SKINNING</span>
+      <div class="series-line"></div>
+      <span class="series-count">4 PROJECTS</span>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/H3Lf29ETnzJ/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="rigging">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/character-rig_H3Lf29ETnzJ.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">RIGGING & SKINNING</div>
+          <div class="card-title">CHARACTER <span class="card-title-g">RIG</span></div>
+          <div class="card-tags">Maya · IK/FK · Skin Weighting · Control Rig</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/UQV6U55twKC/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="rigging">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_01_UQV6U55twKC.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
+          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 1</span></div>
+          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/I-6mhm7gr_V/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="rigging">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_02_I-6mhm7gr_V.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
+          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 2</span></div>
+          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/BCkbiaGXRUd/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="rigging">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_03_BCkbiaGXRUd.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
+          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 3</span></div>
+          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <!-- ═══ UNITY PARTICLE VFX ═══ -->
+    <div class="series-divider">
+      <span class="series-label">UNITY PARTICLE VFX</span>
+      <div class="series-line"></div>
+      <span class="series-count">8 PARTS</span>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/6mXRAp65_h9/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/unity-particle_01_6mXRAp65_h9.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">UNITY PARTICLE SYSTEMS <span class="card-title-g">— PT. 1</span></div>
+          <div class="card-tags">Unity · Real-time VFX · Particle Systems</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/HgScAXpezzd/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/unity-particle_02_HgScAXpezzd.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">UNITY PARTICLE SYSTEMS <span class="card-title-g">— PT. 2</span></div>
+          <div class="card-tags">Unity · Real-time VFX · Particle Systems</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/QzjA-sRxkqu/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/unity-particle_03_QzjA-sRxkqu.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">UNITY PARTICLE SYSTEMS <span class="card-title-g">— PT. 3</span></div>
+          <div class="card-tags">Unity · Real-time VFX · Particle Systems</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/4uZpVugm9-7/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/unity-particle_04_4uZpVugm9-7.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">UNITY PARTICLE SYSTEMS <span class="card-title-g">— PT. 4</span></div>
+          <div class="card-tags">Unity · Real-time VFX · Shuriken Particles</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/MSMYvJSVWVM/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/unity-particle_05_MSMYvJSVWVM.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">UNITY PARTICLE SYSTEMS <span class="card-title-g">— PT. 5</span></div>
+          <div class="card-tags">Unity · Real-time VFX · Particle Systems</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/UbggWueAYTW/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/unity-particle_06_UbggWueAYTW.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">UNITY PARTICLE SYSTEMS <span class="card-title-g">— PT. 6</span></div>
+          <div class="card-tags">Unity · Real-time VFX · Particle Systems</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/NoE_nnx2G3L/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/unity-particle_07_NoE_nnx2G3L.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">UNITY PARTICLE SYSTEMS <span class="card-title-g">— PT. 7</span></div>
+          <div class="card-tags">Unity · Real-time VFX · Particle Systems</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/TPjEButyLIE/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/unity-particle_08_TPjEButyLIE.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">UNITY PARTICLE SYSTEMS <span class="card-title-g">— PT. 8</span></div>
+          <div class="card-tags">Unity · Real-time VFX · Particle Systems</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <!-- ═══ RECENT ANIMATION ═══ -->
+    <div class="series-divider">
+      <span class="series-label">RECENT ANIMATION</span>
+      <div class="series-line"></div>
+      <span class="series-count">7 PARTS</span>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/Q3o3ImhDRtn/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_01_Q3o3ImhDRtn.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 1</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/JfQyXMEa9kn/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_02_JfQyXMEa9kn.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 2</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/M_Jy8D8xtui/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_03_M_Jy8D8xtui.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 3</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/I2WXjQ62nHL/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_04_I2WXjQ62nHL.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 4</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/NVAQLzZC8e6/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_05_NVAQLzZC8e6.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 5</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/2wcTfFHNJ6d/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_06_2wcTfFHNJ6d.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 6</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/VxuNUDtvEdJ/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_07_VxuNUDtvEdJ.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 7</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <!-- ═══ GAME SHOWCASE ═══ -->
+    <div class="series-divider">
+      <span class="series-label">GAME SHOWCASE</span>
+      <div class="series-line"></div>
+      <span class="series-count">1 PROJECT</span>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/LISIzno5-ft/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/game-showcase-rough-edition_LISIzno5-ft.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">ANIMATION & LIGHTING</div>
+          <div class="card-title">GAME ASSET <span class="card-title-g">SHOWCASE</span></div>
+          <div class="card-tags">Maya · Game-Ready · Real-time Lighting</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+  </div><!-- /work-left -->
+
+  <!-- Sticky filter panel -->
+  <div class="work-panel">
+    <div class="sec-label">/ IN MOTION</div>
+    <h3 class="sec-title" style="font-size:clamp(28px,3vw,42px)">WORK<br>IN<br>MOTION.</h3>
+    <p class="work-desc">
+      Rigging, skinning, character animation, particle VFX, and real-time lighting — the full performance pipeline.
+    </p>
+    <div class="filters">
+      <button class="fil on" data-filter="all">ALL</button>
+      <button class="fil" data-filter="rigging">RIGGING & SKINNING</button>
+      <button class="fil" data-filter="animation">ANIMATION & LIGHTING</button>
+    </div>
+  </div>
+</div><!-- /work-wrap -->
+
+<div class="divider"></div>
+
+<!-- ══════════ SKILLS ══════════ -->
+<section id="skills">
+  <div class="sk-hd">
+    <div class="sec-label reveal">/ 03 — TOOLS & EXPERTISE</div>
+    <h2 class="sec-title reveal" style="white-space:nowrap;font-size:clamp(28px,5.5vw,72px);">SOFTWARE ARSENAL.</h2>
+  </div>
+
+  <div class="tools stagger">
+    <div class="tool"><div class="tool-ico">MA</div><div class="tool-n">MAYA</div></div>
+    <div class="tool"><div class="tool-ico">ZB</div><div class="tool-n">ZBRUSH</div></div>
+    <div class="tool"><div class="tool-ico">SP</div><div class="tool-n">SUBSTANCE</div></div>
+    <div class="tool"><div class="tool-ico">UN</div><div class="tool-n">UNITY</div></div>
+    <div class="tool"><div class="tool-ico">BL</div><div class="tool-n">BLENDER</div></div>
+    <div class="tool"><div class="tool-ico">PS</div><div class="tool-n">PHOTOSHOP</div></div>
+    <div class="tool"><div class="tool-ico">UE</div><div class="tool-n">UNREAL</div></div>
+    <div class="tool"><div class="tool-ico">MR</div><div class="tool-n">MARMOSET</div></div>
+  </div>
+
+  <div class="sk-bars">
+    <div class="sb reveal" style="--w:95%">
+      <div class="sb-top"><span class="sb-name">3D MODELING & RETOPOLOGY</span><span class="sb-val">95%</span></div>
+      <div class="sb-track"><div class="sb-fill"></div></div>
+    </div>
+    <div class="sb reveal" style="--w:90%">
+      <div class="sb-top"><span class="sb-name">ZBRUSH SCULPTING</span><span class="sb-val">90%</span></div>
+      <div class="sb-track"><div class="sb-fill"></div></div>
+    </div>
+    <div class="sb reveal" style="--w:95%">
+      <div class="sb-top"><span class="sb-name">MAYA RIGGING (IK/FK)</span><span class="sb-val">95%</span></div>
+      <div class="sb-track"><div class="sb-fill"></div></div>
+    </div>
+    <div class="sb reveal" style="--w:88%">
+      <div class="sb-top"><span class="sb-name">FACIAL RIGGING (FACS)</span><span class="sb-val">88%</span></div>
+      <div class="sb-track"><div class="sb-fill"></div></div>
+    </div>
+    <div class="sb reveal" style="--w:95%">
+      <div class="sb-top"><span class="sb-name">SUBSTANCE PAINTER (PBR)</span><span class="sb-val">95%</span></div>
+      <div class="sb-track"><div class="sb-fill"></div></div>
+    </div>
+    <div class="sb reveal" style="--w:92%">
+      <div class="sb-top"><span class="sb-name">UNITY / AR/VR/MR</span><span class="sb-val">92%</span></div>
+      <div class="sb-track"><div class="sb-fill"></div></div>
+    </div>
+    <div class="sb reveal" style="--w:90%">
+      <div class="sb-top"><span class="sb-name">CHARACTER ANIMATION</span><span class="sb-val">90%</span></div>
+      <div class="sb-track"><div class="sb-fill"></div></div>
+    </div>
+    <div class="sb reveal" style="--w:88%">
+      <div class="sb-top"><span class="sb-name">PHOTOSHOP & ILLUSTRATOR</span><span class="sb-val">88%</span></div>
+      <div class="sb-track"><div class="sb-fill"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ CONTACT ══════════ -->
+<section id="contact">
+  <div class="sec-label reveal">/ 04 — GET IN TOUCH</div>
+  <h2 class="ct-title reveal">
+    READY TO<br><em>BRING YOUR VISION</em><br>TO LIFE.
+  </h2>
+
+  <div class="ct-btns reveal">
+    <a href="mailto:harpreetsingh2604@gmail.com" class="btn-primary">
+      <span>SEND A MESSAGE</span>
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M1 7h12M7 1l6 6-6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <a href="https://happysingh3d.github.io/3d-portfolio/Harpreet_VR_Gaming_Resume.pdf"
+       target="_blank" class="btn-secondary">
+      <span>DOWNLOAD RESUME</span>
+    </a>
+  </div>
+
+  <div class="ct-email reveal">harpreetsingh2604@gmail.com</div>
+  <div class="ct-socials reveal">
+    <a href="https://happysingh3d.github.io/graphic-portfolio/" target="_blank">GRAPHIC PORTFOLIO</a>
+    <a href="https://happysingh3d.github.io/video-portfolio/" target="_blank">VIDEO PORTFOLIO</a>
+    <a href="https://github.com/happysingh3d" target="_blank">GITHUB</a>
+    <a href="https://happysingh3d.github.io/3d-toolkit/" target="_blank">3D TOOLKIT</a>
+  </div>
+</section>
+
+<footer>
+  <span class="hi">© 2024 HARPREET SINGH UPPAL</span>
+  <span>3D CG ARTIST · AR/VR SPECIALIST</span>
+  <span>THREE.JS + VANILLA JS</span>
+</footer>
+
+<!-- ══════════ SCRIPTS ══════════ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ── LOADER ─────────────────────────────────────────── */
+window.addEventListener('load',()=>setTimeout(()=>document.getElementById('loader').classList.add('out'),2400));
+
+/* ── CURSOR ─────────────────────────────────────────── */
+const dot=document.getElementById('cur'),ring=document.getElementById('cur-r');
+let cx=0,cy=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;});
+(function cl(){rx+=(cx-rx)*.14;ry+=(cy-ry)*.14;
+  dot.style.cssText=`left:${cx}px;top:${cy}px`;
+  ring.style.cssText=`left:${rx}px;top:${ry}px`;
+  requestAnimationFrame(cl);})();
+
+document.querySelectorAll('a,button,.project-card,.model-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ring.style.width='44px';ring.style.height='44px';ring.style.borderColor='rgba(201,149,58,.7)';});
+  el.addEventListener('mouseleave',()=>{ring.style.width='28px';ring.style.height='28px';ring.style.borderColor='rgba(201,149,58,.4)';});
+});
+
+/* ── PROGRESS BAR ───────────────────────────────────── */
+const prog=document.getElementById('prog');
+window.addEventListener('scroll',()=>{
+  const s=document.documentElement;
+  prog.style.transform=`scaleX(${s.scrollTop/(s.scrollHeight-s.clientHeight)})`;
+},{passive:true});
+
+/* ── GLITCH ─────────────────────────────────────────── */
+const ABC='!@#$%^&*_+=[]|;:,.?/~ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+function glitch(el){const o=el.textContent;let i=0;
+  const iv=setInterval(()=>{
+    el.textContent=o.split('').map((c,j)=>j<i?o[j]:c===' '?' ':ABC[Math.floor(Math.random()*ABC.length)]).join('');
+    if((i+=.7)>=o.length){clearInterval(iv);el.textContent=o;}
+  },26);}
+(function ag(){['c-bl','c-br'].forEach(id=>glitch(document.getElementById(id)));
+  setTimeout(ag,Math.random()*3000+2000);})();
+
+/* ── THREE.JS HERO — GOLD SHARDS ───────────────────── */
+const C=document.getElementById('hero-canvas');
+C.width=innerWidth; C.height=innerHeight;
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(65,innerWidth/innerHeight,.1,100);
+cam.position.z=5;
+const renderer=new THREE.WebGLRenderer({canvas:C,antialias:true,alpha:false});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setClearColor(0x0A0807,1);
+
+scene.add(new THREE.AmbientLight(0x1A0F05,2));
+const pl1=new THREE.PointLight(0xC9953A,4,16); pl1.position.set(3,2,2); scene.add(pl1);
+const pl2=new THREE.PointLight(0xE8B85F,2,18); pl2.position.set(-4,-2,3); scene.add(pl2);
+
+const shards=[];
+const GOLD=new THREE.Color(0xC9953A);
+const GOLD2=new THREE.Color(0xE8B85F);
+const AMB=new THREE.Color(0xD4782A);
+const colors=[GOLD,GOLD2,AMB,GOLD,GOLD,GOLD2];
+
+for(let i=0;i<58;i++){
+  const t=Math.random(),sz=t<.3?.04+Math.random()*.08:t<.72?.1+Math.random()*.22:.22+Math.random()*.35;
+  const geo=new THREE.OctahedronGeometry(sz,0);
+  const col=colors[Math.floor(Math.random()*colors.length)];
+  const g=new THREE.Group();
+  g.add(new THREE.Mesh(geo,new THREE.MeshPhongMaterial({color:0x180F04,emissive:0x0D0804,shininess:100,transparent:true,opacity:.9})));
+  g.add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:col,wireframe:true,transparent:true,opacity:.12+Math.random()*.35})));
+  const sp=16;
+  g.position.set((Math.random()-.5)*sp,(Math.random()-.5)*sp*.5,(Math.random()-.5)*7-1);
+  g.rotation.set(Math.random()*Math.PI*2,Math.random()*Math.PI*2,Math.random()*Math.PI*2);
+  scene.add(g);
+  shards.push({m:g,rx:(Math.random()-.5)*.012,ry:(Math.random()-.5)*.014,rz:(Math.random()-.5)*.007,
+               fa:.08+Math.random()*.4,ff:.08+Math.random()*.4,fo:Math.random()*Math.PI*2,by:g.position.y});
+}
+
+let mx=0,my=0,ccx=0,ccy=0;
+document.addEventListener('mousemove',e=>{mx=(e.clientX/innerWidth-.5);my=-(e.clientY/innerHeight-.5);});
+const clk=new THREE.Clock();
+let hOff=0;
+(function rl(){
+  requestAnimationFrame(rl);
+  const t=clk.getElapsedTime();
+  ccx+=(mx*1.5-ccx)*.022; ccy+=(my*.9-ccy)*.022;
+  cam.position.x=ccx; cam.position.y=ccy+hOff; cam.lookAt(0,0,0);
+  pl1.position.set(Math.sin(t*.25)*4.5,Math.cos(t*.18)*3,2);
+  shards.forEach(s=>{
+    s.m.rotation.x+=s.rx; s.m.rotation.y+=s.ry; s.m.rotation.z+=s.rz;
+    s.m.position.y=s.by+Math.sin(t*s.ff+s.fo)*s.fa;
+  });
+  renderer.render(scene,cam);
+})();
+window.addEventListener('resize',()=>{cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});
+
+/* ── HERO PARALLAX ──────────────────────────────────── */
+const heroEl=document.getElementById('hero'),heroInner=document.getElementById('hero-inner');
+window.addEventListener('scroll',()=>{
+  const sy=window.scrollY,h=heroEl.offsetHeight;
+  if(sy<h){const p=sy/h;heroInner.style.transform=`translate(-50%,calc(-50% + ${sy*.35}px))`;heroInner.style.opacity=Math.max(0,1-p*1.7);hOff=-p*1.1;}
+},{passive:true});
+
+/* ── MINI CANVAS (ABOUT) — GOLD ─────────────────────── */
+const mc=document.getElementById('mini-canvas');
+mc.width=mc.parentElement.offsetWidth||380; mc.height=320;
+const as=new THREE.Scene(),ac=new THREE.PerspectiveCamera(50,mc.width/320,.1,100);
+ac.position.z=3;
+const ar=new THREE.WebGLRenderer({canvas:mc,antialias:true,alpha:true});
+ar.setSize(mc.width,320); ar.setClearColor(0,0);
+const ag2=new THREE.OctahedronGeometry(1.1,1);
+const aGrp=new THREE.Group();
+aGrp.add(new THREE.Mesh(ag2,new THREE.MeshPhongMaterial({color:0x180F04,emissive:0x120A04,transparent:true,opacity:.7})));
+aGrp.add(new THREE.Mesh(ag2,new THREE.MeshBasicMaterial({color:0xC9953A,wireframe:true,transparent:true,opacity:.28})));
+as.add(aGrp);
+const al2=new THREE.PointLight(0xC9953A,3.5,10); al2.position.set(2,2,2); as.add(al2);
+as.add(new THREE.AmbientLight(0xE8B85F,.8));
+(function aloop(){requestAnimationFrame(aloop);aGrp.rotation.y+=.005;aGrp.rotation.x+=.003;ar.render(as,ac);})();
+
+/* ── SCROLL REVEAL ──────────────────────────────────── */
+const io=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(!e.isIntersecting)return;
+    e.target.classList.add('vis');
+    e.target.querySelectorAll('.sb-fill').forEach(f=>{f.style.width=f.closest('.sb').style.getPropertyValue('--w');});
+    io.unobserve(e.target);
+  });
+},{threshold:.08,rootMargin:'0px 0px -40px 0px'});
+document.querySelectorAll('.reveal,.stagger,.sb').forEach(el=>io.observe(el));
+
+/* ════════════════════════════════════════════════════
+   ── LIGHTBOX — MODEL CARDS ──────────────────────────
+════════════════════════════════════════════════════ */
+const lb=document.getElementById('lightbox');
+const lbBg=document.getElementById('lb-bg');
+let modelCards=[],lbIdx=0;
+
+function buildImgWrap(card){
+  const wrap=document.getElementById('lb-img-wrap');
+  const src=card.querySelector('.model-thumb');
+  const bg=src?src.style.backgroundImage:'';
+  if(bg && !card.classList.contains('placeholder')){
+    const url=bg.replace(/url\(['"]?/,'').replace(/['"]?\)/,'');
+    wrap.innerHTML=`<img class="lb-img" src="${url}" alt="3D Model Render"/>`;
+  } else {
+    wrap.innerHTML=`
+      <div class="lb-img-placeholder">
+        <div class="ph-icon-lg">🗿</div>
+        <div class="ph-label">RENDER COMING SOON<br>REPLACE .model-thumb background-image</div>
+      </div>`;
+  }
+}
+
+function openLB(idx){
+  lbIdx=idx;
+  const card=modelCards[idx];
+  buildImgWrap(card);
+  document.getElementById('lb-num').textContent=card.dataset.num||`${idx+1} / ${modelCards.length}`;
+  document.getElementById('lb-cat').textContent=card.dataset.cat||'';
+  const titleEl=document.getElementById('lb-title');
+  titleEl.innerHTML=(card.dataset.title||'')+(card.dataset.titleB?` <strong>${card.dataset.titleB}</strong>`:'');
+  document.getElementById('lb-subtitle').textContent=card.dataset.subtitle||'';
+  document.getElementById('lb-desc').textContent=card.dataset.desc||'';
+  document.getElementById('lb-software').textContent=card.dataset.software||'—';
+  document.getElementById('lb-polycount').textContent=card.dataset.polycount||'—';
+  document.getElementById('lb-textures').textContent=card.dataset.textures||'—';
+  document.getElementById('lb-software2').textContent=card.dataset.software2||'—';
+  document.getElementById('lb-counter').textContent=`${idx+1} / ${modelCards.length}`;
+  lb.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeLB(){lb.classList.remove('open');document.body.style.overflow='';}
+function navLB(dir){openLB((lbIdx+dir+modelCards.length)%modelCards.length);}
+
+document.querySelectorAll('.model-card').forEach((card,i)=>{
+  modelCards.push(card);
+  card.addEventListener('click',()=>openLB(i));
+});
+
+document.getElementById('lb-close').addEventListener('click',closeLB);
+lbBg.addEventListener('click',closeLB);
+document.getElementById('lb-prev').addEventListener('click',()=>navLB(-1));
+document.getElementById('lb-next').addEventListener('click',()=>navLB(1));
+document.addEventListener('keydown',e=>{
+  if(!lb.classList.contains('open'))return;
+  if(e.key==='Escape')closeLB();
+  if(e.key==='ArrowLeft')navLB(-1);
+  if(e.key==='ArrowRight')navLB(1);
+});
+
+/* ── VIDEO CARDS — click to play ────────────────────── */
+document.querySelectorAll('.project-card').forEach(card=>{
+  card.addEventListener('click',()=>{
+    const media=card.querySelector('.card-media');
+    const embed=card.dataset.embed;
+    if(!embed)return;
+    const iframe=media.querySelector('iframe');
+    const overlay=media.querySelector('.card-play');
+    if(!iframe.src)iframe.src=embed;
+    iframe.classList.add('active');
+    if(overlay)overlay.classList.add('gone');
+  });
+});
+
+/* ── FILTERS ─────────────────────────────────────────── */
+document.querySelectorAll('.fil').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fil').forEach(f=>f.classList.remove('on'));
+    btn.classList.add('on');
+    const f=btn.dataset.filter;
+    document.querySelectorAll('.project-card').forEach(c=>{
+      c.style.display=(f==='all'||c.dataset.cat===f)?'':'none';
+    });
+  });
+});
+</script>
+</body>
+</html>
