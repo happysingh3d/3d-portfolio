@@ -177,10 +177,10 @@ function renderProjects() {
 }
 
 function categoryLabel(cat) {
-  return { "3d-modeling": "3D Modeling", "rigging": "Rigging", "3d-animation": "Animation" }[cat] || cat;
+  return { "3d-modeling": "3D Modeling", "rigging": "Rigging", "3d-animation": "Animation", "interactive": "Games" }[cat] || cat;
 }
 function categoryBadgeClass(cat) {
-  return { "rigging": "green", "3d-animation": "white" }[cat] || "";
+  return { "rigging": "green", "3d-animation": "white", "interactive": "" }[cat] || "";
 }
 
 function initProjectGrid() {
@@ -283,6 +283,24 @@ function renderModalContent() {
     tagsWrap.innerHTML = proj.tags.map(t => `<span class="modal-tag">${t}</span>`).join("");
   }
   if (counter) counter.textContent = `${currentMediaIndex + 1} / ${proj.media.length} assets`;
+
+  // Action Button (e.g. Play Game)
+  const actionContainer = document.getElementById("modal-action-container");
+  if (actionContainer) {
+    if (proj.liveUrl) {
+      const btnText = proj.category === "interactive" ? "Play Game 🎮" : "Visit Project ↗";
+      actionContainer.innerHTML = `
+        <a href="${proj.liveUrl}" target="_blank" rel="noopener noreferrer" class="btn-primary" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; width: 100%;">
+          ${btnText}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+        </a>
+      `;
+      actionContainer.style.display = "";
+    } else {
+      actionContainer.innerHTML = "";
+      actionContainer.style.display = "none";
+    }
+  }
 
   renderStage();
   renderThumbs();

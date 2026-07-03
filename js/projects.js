@@ -419,6 +419,25 @@ const PROJECTS = [
       "thumbnails/solution-for-devs_03_BCkbiaGXRUd.png",
       "https://www-ccv.adobe.io/v1/player/ccv/BCkbiaGXRUd/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
     ]
+  },
+  {
+    "id": "proj-game-001",
+    "title": "Block City Mayhem \u2014 3D Browser Game",
+    "category": "interactive",
+    "tags": [
+      "3D Game Development",
+      "Three.js",
+      "Web Graphics",
+      "Interactive"
+    ],
+    "coverImage": "thumbnails/block_city_mayhem_cover.png",
+    "description": "Block City Mayhem is an interactive 3D browser game generated using AI and Three.js. Navigate through a blocky voxel city, survive, complete objectives, and manage your health, timer, and score in real-time.",
+    "client": "Personal Project",
+    "year": "2026",
+    "media": [
+      "https://happysingh3d.github.io/block-city-mayhem/"
+    ],
+    "liveUrl": "https://happysingh3d.github.io/block-city-mayhem/"
   }
 ];
 
@@ -433,6 +452,7 @@ function isIframeMedia(url) {
     lower.includes("youtube.com/embed") ||
     lower.includes("youtu.be") ||
     lower.includes("/embed") ||
-    lower.includes("sketchfab.com/models")
+    lower.includes("sketchfab.com/models") ||
+    lower.includes("block-city-mayhem")
   );
 }
