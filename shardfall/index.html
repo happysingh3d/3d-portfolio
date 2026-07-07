@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SHARDFALL — Bahimut Hunt (Prototype)</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { width:100%; height:100%; overflow:hidden; background:#0a0c12; font-family:'Segoe UI', Arial, sans-serif; }
+  canvas { display:block; }
+  #hud { position:fixed; inset:0; pointer-events:none; user-select:none; }
+
+  /* Player bars */
+  #playerPanel { position:absolute; left:24px; bottom:24px; width:320px; }
+  .barWrap { background:rgba(0,0,0,.55); border:1px solid rgba(255,255,255,.18); border-radius:4px; height:18px; margin-top:6px; overflow:hidden; }
+  .barFill { height:100%; transition:width .12s linear; }
+  #hpFill { background:linear-gradient(90deg,#2fd06b,#79f0a4); width:100%; }
+  #stFill { background:linear-gradient(90deg,#d9a52a,#ffe089); width:100%; }
+  #playerName { color:#dfe8ff; font-size:13px; letter-spacing:2px; text-shadow:0 1px 3px #000; }
+  #flasks { color:#9fe0ff; font-size:12px; margin-top:5px; text-shadow:0 1px 2px #000; }
+  #shards { color:#ffb35c; font-size:12px; margin-top:2px; text-shadow:0 1px 2px #000; }
+
+  /* Boss bar */
+  #bossPanel { position:absolute; top:22px; left:50%; transform:translateX(-50%); width:min(680px,80vw); text-align:center; }
+  #bossName { color:#ffd9c2; font-size:15px; letter-spacing:4px; text-shadow:0 1px 4px #000; margin-bottom:5px; }
+  #bossBarWrap { background:rgba(0,0,0,.6); border:1px solid rgba(255,140,60,.4); border-radius:3px; height:14px; overflow:hidden; }
+  #bossFill { height:100%; width:100%; background:linear-gradient(90deg,#c8330f,#ff9a3d); transition:width .15s linear; }
+  #partPips { margin-top:6px; font-size:11px; color:#ccc; text-shadow:0 1px 2px #000; }
+  .pip { display:inline-block; margin:0 8px; }
+  .pip.broken { color:#ffb35c; text-decoration:line-through; opacity:.7; }
+
+  /* Center messages */
+  #centerMsg { position:absolute; top:38%; width:100%; text-align:center; color:#ffe9d0; font-size:34px; letter-spacing:6px; text-shadow:0 2px 12px #000; opacity:0; transition:opacity .4s; }
+  #promptMsg { position:absolute; bottom:130px; width:100%; text-align:center; color:#cfe6ff; font-size:16px; text-shadow:0 1px 4px #000; opacity:0; }
+
+  /* Screens */
+  .screen { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(6,8,14,.86); pointer-events:auto; }
+  .screen h1 { color:#f4e7d0; font-size:44px; letter-spacing:8px; margin-bottom:8px; text-shadow:0 0 24px rgba(255,150,60,.35); }
+  .screen h2 { color:#ffb35c; font-size:18px; letter-spacing:3px; font-weight:400; margin-bottom:26px; }
+  .screen p { color:#aeb8cc; font-size:14px; max-width:560px; text-align:center; line-height:1.7; margin-bottom:10px; }
+  .screen .controls { color:#8fa3c4; font-size:13px; line-height:2; text-align:left; margin:14px 0 24px; }
+  .screen button { pointer-events:auto; cursor:pointer; background:linear-gradient(180deg,#e5762c,#b34a12); color:#fff; border:none; border-radius:4px; padding:13px 42px; font-size:16px; letter-spacing:3px; box-shadow:0 4px 18px rgba(230,120,40,.35); }
+  .screen button:hover { filter:brightness(1.15); }
+  #lootList { color:#ffd9a0; font-size:15px; line-height:2; margin:10px 0 24px; text-align:center; }
+  .hidden { display:none !important; }
+
+  #vignette { position:absolute; inset:0; box-shadow:inset 0 0 180px rgba(200,20,20,0); transition:box-shadow .25s; }
+  #phaseFlash { position:absolute; inset:0; background:rgba(255,90,20,0); transition:background .5s; }
+  #crosshair { position:absolute; top:50%; left:50%; width:5px; height:5px; margin:-2px 0 0 -2px; border-radius:50%; background:rgba(255,255,255,.55); }
+</style>
+</head>
+<body>
+<div id="hud">
+  <div id="vignette"></div>
+  <div id="phaseFlash"></div>
+  <div id="crosshair"></div>
+
+  <div id="bossPanel" class="hidden">
+    <div id="bossName">GRAVEMAW &mdash; EMBER BAHIMUT</div>
+    <div id="bossBarWrap"><div id="bossFill"></div></div>
+    <div id="partPips">
+      <span class="pip" id="pipLH">◆ Left Horn</span>
+      <span class="pip" id="pipRH">◆ Right Horn</span>
+      <span class="pip" id="pipTL">◆ Tail</span>
+    </div>
+  </div>
+
+  <div id="playerPanel">
+    <div id="playerName">WARDEN</div>
+    <div class="barWrap"><div class="barFill" id="hpFill"></div></div>
+    <div class="barWrap" style="height:12px"><div class="barFill" id="stFill"></div></div>
+    <div id="flasks">Flasks: ◈ ◈ ◈ &nbsp;(Q)</div>
+    <div id="shards">Shards: 0</div>
+  </div>
+
+  <div id="centerMsg"></div>
+  <div id="promptMsg"></div>
+
+  <div id="titleScreen" class="screen">
+    <h1>SHARDFALL</h1>
+    <h2>A BAHIMUT HUNT &mdash; PROTOTYPE</h2>
+    <p>The Sundered Isles drift in an endless sky. You are a <b>Warden</b> — sent to fell
+    <b>Gravemaw</b>, an Ember Bahimut, and carve the shardlight from its bones.</p>
+    <p>Break its horns and tail for bonus shards. Watch the red ground marks — dodge through them.</p>
+    <div class="controls">
+      <b>WASD</b> — move &nbsp;&nbsp; <b>Mouse</b> — camera<br>
+      <b>Left Click</b> — light combo (3 hits) &nbsp;&nbsp; <b>Right Click (hold)</b> — charged heavy<br>
+      <b>Shift / Space</b> — dodge roll (i-frames) &nbsp;&nbsp; <b>Q</b> — heal flask &nbsp;&nbsp; <b>E</b> — carve
+    </div>
+    <button id="startBtn">BEGIN THE HUNT</button>
+  </div>
+
+  <div id="deathScreen" class="screen hidden">
+    <h1 style="color:#ff8a7a">FELLED</h1>
+    <p>The isle claims another Warden. Gravemaw stalks on.</p>
+    <button id="retryBtn">HUNT AGAIN</button>
+  </div>
+
+  <div id="victoryScreen" class="screen hidden">
+    <h1 style="color:#ffd28a">BAHIMUT FELLED</h1>
+    <h2>THE CARVE</h2>
+    <div id="lootList"></div>
+    <button id="againBtn">HUNT AGAIN</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* =========================================================================
+   SHARDFALL — Bahimut Hunt prototype
+   Original monster-hunting game inspired by the hunt/carve/craft loop.
+   All names, creatures and lore are original.
+   ========================================================================= */
+
+// ------------------------------------------------------------------ core
+let scene, camera, renderer, clock;
+let timeScale = 1, hitstopT = 0, shakeT = 0, shakeAmp = 0;
+let gameState = 'title'; // title | fight | carve | dead | victory
+const V3 = (x=0,y=0,z=0)=>new THREE.Vector3(x,y,z);
+const rand = (a,b)=>a+Math.random()*(b-a);
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const TAU = Math.PI*2;
+
+function angleLerp(a,b,t){ let d=(b-a)%TAU; if(d>Math.PI)d-=TAU; if(d<-Math.PI)d+=TAU; return a+d*t; }
+
+if (typeof THREE === 'undefined') {
+  document.body.innerHTML = `
+    <div style="color: #ff8a7a; padding: 40px; text-align: center; font-family: sans-serif; background: #0a0c12; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+      <h1 style="font-size: 32px; margin-bottom: 16px;">Error: Three.js failed to load</h1>
+      <p style="font-size: 16px; color: #aeb8cc; max-width: 500px; line-height: 1.6;">This prototype requires Three.js to run. Please check your internet connection or ensure cdnjs.cloudflare.com is accessible.</p>
+    </div>
+  `;
+  throw new Error("Three.js not loaded");
+}
+
+function init(){
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x1a2233);
+  scene.fog = new THREE.FogExp2(0x1a2233, 0.016);
+
+  camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 400);
+  renderer = new THREE.WebGLRenderer({ antialias:true });
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  document.body.appendChild(renderer.domElement);
+  clock = new THREE.Clock();
+
+  const hemi = new THREE.HemisphereLight(0x8fb2ff, 0x3d2b1e, 0.85);
+  scene.add(hemi);
+  const sun = new THREE.DirectionalLight(0xffd9b0, 1.1);
+  sun.position.set(40,60,25);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(2048,2048);
+  sun.shadow.camera.left=-50; sun.shadow.camera.right=50;
+  sun.shadow.camera.top=50; sun.shadow.camera.bottom=-50;
+  scene.add(sun);
+
+  buildArena();
+  buildPlayer();
+  buildBoss();
+  bindInput();
+  bindUI();
+
+  addEventListener('resize', ()=>{
+    camera.aspect = innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+  });
+  animate();
+}
+
+// ------------------------------------------------------------------ arena
+const ARENA_R = 34;
+function buildArena(){
+  // island ground
+  const gGeo = new THREE.CylinderGeometry(ARENA_R, ARENA_R*0.72, 7, 48);
+  const gMat = new THREE.MeshStandardMaterial({ color:0x4a5d3a, roughness:1 });
+  const ground = new THREE.Mesh(gGeo, gMat);
+  ground.position.y = -3.5;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // dirt rim
+  const rim = new THREE.Mesh(
+    new THREE.TorusGeometry(ARENA_R-0.4, 1.1, 8, 48),
+    new THREE.MeshStandardMaterial({ color:0x5a4632, roughness:1 }));
+  rim.rotation.x = Math.PI/2; rim.position.y = 0.1;
+  scene.add(rim);
+
+  // rocks
+  const rockMat = new THREE.MeshStandardMaterial({ color:0x6b6f78, roughness:.95 });
+  for(let i=0;i<26;i++){
+    const s = rand(0.7,2.6);
+    const r = new THREE.Mesh(new THREE.DodecahedronGeometry(s,0), rockMat);
+    const a = rand(0,TAU), d = rand(ARENA_R*0.55, ARENA_R*0.94);
+    r.position.set(Math.cos(a)*d, s*0.35, Math.sin(a)*d);
+    r.rotation.set(rand(0,3),rand(0,3),rand(0,3));
+    r.castShadow = r.receiveShadow = true;
+    scene.add(r);
+  }
+  // shardlight crystals
+  const cryMat = new THREE.MeshStandardMaterial({ color:0x64d8ff, emissive:0x1f8fc0, emissiveIntensity:.8, roughness:.3 });
+  for(let i=0;i<10;i++){
+    const h = rand(1.2,3.2);
+    const c = new THREE.Mesh(new THREE.ConeGeometry(rand(.25,.5), h, 5), cryMat);
+    const a = rand(0,TAU), d = rand(ARENA_R*0.6, ARENA_R*0.92);
+    c.position.set(Math.cos(a)*d, h/2, Math.sin(a)*d);
+    c.rotation.z = rand(-.3,.3); c.rotation.x = rand(-.3,.3);
+    c.castShadow = true;
+    scene.add(c);
+  }
+  // distant floating islets
+  const isMat = new THREE.MeshStandardMaterial({ color:0x38445c, roughness:1 });
+  for(let i=0;i<8;i++){
+    const s = rand(4,10);
+    const isl = new THREE.Mesh(new THREE.CylinderGeometry(s, s*0.4, s*0.8, 8), isMat);
+    const a = rand(0,TAU), d = rand(70,140);
+    isl.position.set(Math.cos(a)*d, rand(-14,20), Math.sin(a)*d);
+    scene.add(isl);
+  }
+  // sparse grass tufts
+  const tuftMat = new THREE.MeshStandardMaterial({ color:0x5e7a42, roughness:1 });
+  for(let i=0;i<60;i++){
+    const t = new THREE.Mesh(new THREE.ConeGeometry(.14, rand(.4,.8), 4), tuftMat);
+    const a = rand(0,TAU), d = rand(2, ARENA_R*0.95);
+    t.position.set(Math.cos(a)*d, .25, Math.sin(a)*d);
+    scene.add(t);
+  }
+}
+
+// ------------------------------------------------------------------ player
+const player = {
+  root:null, model:null, swordPivot:null,
+  pos:V3(0,0,14), yaw:0,
+  hp:100, maxHp:100, st:100, maxSt:100, stDelay:0,
+  flasks:3, shards:0,
+  vel:V3(),
+  state:'idle',          // idle | attack | dodge | hitstun | dead | heal
+  stateT:0,
+  combo:0, comboWindow:0, attackDidHit:false, bufferedAttack:null,
+  charge:0, charging:false,
+  iframes:0,
+  moveAnimT:0,
+};
+
+function buildPlayer(){
+  player.root = new THREE.Group();
+  const g = new THREE.Group();
+  player.model = g;
+
+  const armorMat = new THREE.MeshStandardMaterial({ color:0x3a5a8c, roughness:.6, metalness:.25 });
+  const clothMat = new THREE.MeshStandardMaterial({ color:0x2b2f3a, roughness:.9 });
+  const skinMat  = new THREE.MeshStandardMaterial({ color:0xd8a27a, roughness:.8 });
+
+  const torso = new THREE.Mesh(new THREE.BoxGeometry(.9,.95,.55), armorMat);
+  torso.position.y = 1.25; torso.castShadow = true; g.add(torso);
+  const hips = new THREE.Mesh(new THREE.BoxGeometry(.75,.45,.5), clothMat);
+  hips.position.y = .62; hips.castShadow=true; g.add(hips);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(.3,12,10), skinMat);
+  head.position.y = 2.0; head.castShadow=true; g.add(head);
+  const helm = new THREE.Mesh(new THREE.ConeGeometry(.33,.4,8), armorMat);
+  helm.position.y = 2.22; g.add(helm);
+
+  // legs (animated)
+  player.legs = [];
+  for(const sx of [-1,1]){
+    const leg = new THREE.Mesh(new THREE.BoxGeometry(.26,.8,.3), clothMat);
+    leg.position.set(sx*.22,.4,0); // pivot approximation: keep simple
+    leg.castShadow = true;
+    g.add(leg);
+    player.legs.push(leg);
+  }
+  // left arm
+  const larm = new THREE.Mesh(new THREE.BoxGeometry(.22,.7,.24), armorMat);
+  larm.position.set(-.58,1.35,0); larm.castShadow=true; g.add(larm);
+
+  // sword: pivot at right shoulder
+  const pivot = new THREE.Group();
+  pivot.position.set(.58,1.6,0);
+  player.swordPivot = pivot;
+  const arm = new THREE.Mesh(new THREE.BoxGeometry(.22,.65,.24), armorMat);
+  arm.position.y = -.3; arm.castShadow=true; pivot.add(arm);
+
+  const sword = new THREE.Group();
+  sword.position.set(0,-.62,0);
+  const grip = new THREE.Mesh(new THREE.CylinderGeometry(.05,.05,.35,8),
+    new THREE.MeshStandardMaterial({ color:0x4a3222, roughness:.9 }));
+  sword.add(grip);
+  const guard = new THREE.Mesh(new THREE.BoxGeometry(.34,.07,.12),
+    new THREE.MeshStandardMaterial({ color:0xc7a44a, metalness:.6, roughness:.4 }));
+  guard.position.y = .2; sword.add(guard);
+  const blade = new THREE.Mesh(new THREE.BoxGeometry(.16,1.9,.05),
+    new THREE.MeshStandardMaterial({ color:0xcfd6e2, metalness:.85, roughness:.25, emissive:0x223344, emissiveIntensity:.3 }));
+  blade.position.y = 1.2; blade.castShadow = true; sword.add(blade);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(.11,.3,4),
+    blade.material);
+  tip.position.y = 2.3; sword.add(tip);
+  pivot.add(sword);
+  player.sword = sword;
+  pivot.rotation.x = 0.5; // rest pose
+  g.add(pivot);
+
+  player.root.add(g);
+  player.root.position.copy(player.pos);
+  scene.add(player.root);
+}
+
+// ------------------------------------------------------------------ camera
+const cam = { yaw: 0, pitch: 0.32, dist: 9 };
+function updateCamera(dt){
+  const target = player.root.position.clone().add(V3(0,2.2,0));
+  const cp = V3(
+    target.x + Math.sin(cam.yaw)*Math.cos(cam.pitch)*cam.dist,
+    target.y + Math.sin(cam.pitch)*cam.dist,
+    target.z + Math.cos(cam.yaw)*Math.cos(cam.pitch)*cam.dist
+  );
+  cp.y = Math.max(cp.y, 0.6);
+  camera.position.lerp(cp, 1-Math.pow(0.0001,dt));
+  if(shakeT>0){
+    camera.position.x += rand(-1,1)*shakeAmp*shakeT;
+    camera.position.y += rand(-1,1)*shakeAmp*shakeT;
+    camera.position.z += rand(-1,1)*shakeAmp*shakeT;
+  }
+  camera.lookAt(target);
+}
+
+// ------------------------------------------------------------------ input
+const keys = {};
+let mouseDX=0, mouseDY=0, pointerLocked=false;
+
+function bindInput(){
+  addEventListener('keydown', e=>{
+    keys[e.code]=true;
+    if(e.code==='KeyQ') useFlask();
+    if(e.code==='KeyE' && gameState==='carve') doCarve();
+    if(e.code==='ShiftLeft'||e.code==='Space'){ e.preventDefault(); tryDodge(); }
+  });
+  addEventListener('keyup', e=>keys[e.code]=false);
+
+  document.addEventListener('mousemove', e=>{
+    if(!pointerLocked) return;
+    mouseDX += e.movementX; mouseDY += e.movementY;
+  });
+  document.addEventListener('pointerlockchange', ()=>{
+    pointerLocked = document.pointerLockElement === renderer.domElement;
+  });
+  renderer.domElement.addEventListener('mousedown', e=>{
+    if(gameState!=='fight' && gameState!=='carve') return;
+    if(!pointerLocked){
+      try {
+        renderer.domElement.requestPointerLock();
+      } catch (err) {
+        console.warn("Pointer lock failed or not supported:", err);
+      }
+      return;
+    }
+    if(e.button===0) tryLightAttack();
+    if(e.button===2){ player.charging = true; player.charge = 0; }
+  });
+  addEventListener('mouseup', e=>{
+    if(e.button===2 && player.charging){ player.charging=false; tryHeavyAttack(); }
+  });
+  addEventListener('contextmenu', e=>e.preventDefault());
+}
+
+// ------------------------------------------------------------------ combat: player actions
+const COMBO = [
+  { dmg:12, dur:.38, active:[.10,.24], swing:'h1', lunge:5 },
+  { dmg:14, dur:.40, active:[.10,.26], swing:'h2', lunge:5 },
+  { dmg:24, dur:.62, active:[.22,.40], swing:'v',  lunge:7 },
+];
+
+function faceBossIfClose(){
+  if(!boss.alive) return;
+  const to = boss.root.position.clone().sub(player.root.position); to.y=0;
+  if(to.length() < 8){
+    const targetYaw = Math.atan2(to.x, to.z);
+    let d = (targetYaw - player.yaw)%TAU;
+    if(d>Math.PI)d-=TAU; if(d<-Math.PI)d+=TAU;
+    if(Math.abs(d) < 1.4) player.yaw = targetYaw;
+  }
+}
+
+function tryLightAttack(){
+  if(player.state==='dodge'||player.state==='hitstun'||player.state==='dead'||player.state==='heal') return;
+  if(player.state==='attack'){ player.bufferedAttack='light'; return; }
+  startAttack(player.comboWindow>0 ? player.combo : 0);
+}
+function startAttack(step){
+  player.state='attack'; player.stateT=0;
+  player.combo = (step+1) % COMBO.length;
+  player.comboStep = step;
+  player.attackDidHit = false;
+  player.comboWindow = 0;
+  faceBossIfClose();
+}
+function tryHeavyAttack(){
+  if(player.state!=='idle' && player.state!=='attack') { return; }
+  if(player.st < 15){ flashStamina(); return; }
+  player.st -= 15; player.stDelay = .7;
+  const c = clamp(player.charge,0,1.1);
+  player.state='attack'; player.stateT=0;
+  player.comboStep = -1; // heavy marker
+  player.heavyDmg = Math.round(20 + 30*c);
+  player.attackDidHit=false; player.combo=0; player.comboWindow=0;
+  faceBossIfClose();
+}
+function tryDodge(){
+  if(gameState!=='fight'&&gameState!=='carve') return;
+  if(player.state==='dodge'||player.state==='dead'||player.state==='heal') return;
+  if(player.st < 22){ flashStamina(); return; }
+  player.st -= 22; player.stDelay = .7;
+  player.state='dodge'; player.stateT=0;
+  player.iframes = .42;
+  // dodge in input direction, else forward
+  const dir = inputDir();
+  player.dodgeDir = dir.lengthSq()>0 ? dir : V3(Math.sin(player.yaw),0,Math.cos(player.yaw));
+}
+function useFlask(){
+  if(gameState!=='fight') return;
+  if(player.flasks<=0 || player.hp>=player.maxHp) return;
+  if(player.state==='dodge'||player.state==='hitstun'||player.state==='dead') return;
+  player.flasks--; player.state='heal'; player.stateT=0;
+  updateFlaskUI();
+}
+
+function inputDir(){
+  const f = (keys['KeyW']?1:0)-(keys['KeyS']?1:0);
+  const s = (keys['KeyD']?1:0)-(keys['KeyA']?1:0);
+  if(!f&&!s) return V3();
+  const fwd = V3(-Math.sin(cam.yaw),0,-Math.cos(cam.yaw));
+  const right = V3(-fwd.z,0,fwd.x);
+  return fwd.multiplyScalar(f).add(right.multiplyScalar(s)).normalize();
+}
+
+// ------------------------------------------------------------------ player update
+function updatePlayer(dt){
+  const p = player;
+  p.iframes = Math.max(0, p.iframes-dt);
+  p.comboWindow = Math.max(0, p.comboWindow-dt);
+  if(p.charging) p.charge += dt;
+
+  // stamina regen
+  p.stDelay -= dt;
+  if(p.stDelay<=0 && p.state!=='dodge') p.st = clamp(p.st + 26*dt, 0, p.maxSt);
+
+  const speed = 8.2;
+  p.stateT += dt;
+
+  if(p.state==='idle'){
+    const dir = inputDir();
+    if(dir.lengthSq()>0){
+      p.root.position.add(dir.clone().multiplyScalar(speed*dt));
+      p.yaw = angleLerp(p.yaw, Math.atan2(dir.x,dir.z), 1-Math.pow(0.00001,dt));
+      p.moveAnimT += dt*9;
+    } else p.moveAnimT *= 0.8;
+    animLegs(Math.sin(p.moveAnimT)* (dir.lengthSq()>0?0.5:0));
+    p.swordPivot.rotation.x = 0.5 + Math.sin(p.moveAnimT*.5)*.05;
+    p.swordPivot.rotation.z = 0;
+    if(p.charging){ // charge pose
+      p.swordPivot.rotation.x = -1.9;
+      p.swordPivot.rotation.z = .4 + Math.min(p.charge,1)*.15*Math.sin(p.stateT*30);
+    }
+  }
+  else if(p.state==='dodge'){
+    const T=.34;
+    p.root.position.add(p.dodgeDir.clone().multiplyScalar(19*dt));
+    p.model.rotation.x = (p.stateT/T)*TAU * (p.dodgeDir.dot(V3(Math.sin(p.yaw),0,Math.cos(p.yaw)))>=0?1:-1);
+    if(p.stateT>=T){ p.state='idle'; p.model.rotation.x=0; }
+  }
+  else if(p.state==='attack'){
+    const heavy = p.comboStep===-1;
+    const def = heavy ? { dmg:p.heavyDmg, dur:.7, active:[.28,.46], swing:'v', lunge:8 } : COMBO[p.comboStep];
+    // lunge forward slightly during first part
+    if(p.stateT < def.active[0])
+      p.root.position.add(V3(Math.sin(p.yaw),0,Math.cos(p.yaw)).multiplyScalar(def.lunge*dt));
+    // swing animation
+    const t = p.stateT/def.dur;
+    if(def.swing==='h1'){ p.swordPivot.rotation.x = -0.6; p.swordPivot.rotation.z = -1.6 + t*3.0; }
+    else if(def.swing==='h2'){ p.swordPivot.rotation.x = -0.6; p.swordPivot.rotation.z = 1.6 - t*3.0; }
+    else { p.swordPivot.rotation.z = 0; p.swordPivot.rotation.x = -2.2 + t*3.4; }
+    // hit window
+    if(!p.attackDidHit && p.stateT>=def.active[0] && p.stateT<=def.active[1]){
+      if(meleeHitCheck(def.dmg, heavy)) p.attackDidHit = true;
+    }
+    if(p.stateT>=def.dur){
+      p.state='idle'; p.stateT=0;
+      p.comboWindow = heavy?0:.6;
+      p.swordPivot.rotation.set(.5,0,0);
+      if(p.bufferedAttack==='light'){ p.bufferedAttack=null; tryLightAttack(); }
+    }
+  }
+  else if(p.state==='hitstun'){
+    if(p.stateT>=.45){ p.state='idle'; }
+  }
+  else if(p.state==='heal'){
+    p.swordPivot.rotation.x = .5;
+    if(p.stateT>=1.0){
+      p.hp = clamp(p.hp+45,0,p.maxHp);
+      spawnDmgNum(p.root.position.clone().add(V3(0,3,0)), '+45', '#7cf59a');
+      p.state='idle';
+    }
+  }
+
+  // clamp to arena
+  const d = Math.hypot(p.root.position.x, p.root.position.z);
+  if(d > ARENA_R-1.5){
+    const s = (ARENA_R-1.5)/d;
+    p.root.position.x*=s; p.root.position.z*=s;
+  }
+  p.model.rotation.y = 0;
+  p.root.rotation.y = p.yaw;
+
+  updateBarsUI();
+}
+function animLegs(a){
+  player.legs[0].rotation.x = a;
+  player.legs[1].rotation.x = -a;
+}
+
+// ------------------------------------------------------------------ boss
+const boss = {
+  root:null, alive:true,
+  hp:1400, maxHp:1400,
+  phase:1,
+  state:'idle', stateT:0, cooldown:2,
+  yaw:0, chargeDir:null,
+  parts:[], // breakable
+  staggerT:0,
+  deadT:0,
+};
+
+function buildBoss(){
+  const root = new THREE.Group();
+  boss.root = root;
+
+  const hideMat = new THREE.MeshStandardMaterial({ color:0x4c3f45, roughness:.9 });
+  const plateMat = new THREE.MeshStandardMaterial({ color:0x2e2530, roughness:.7, metalness:.15 });
+  const emberMat = new THREE.MeshStandardMaterial({ color:0x331409, emissive:0xff5a1a, emissiveIntensity:1.2, roughness:.6 });
+  const hornMat = new THREE.MeshStandardMaterial({ color:0xd8c9a8, roughness:.55 });
+  boss.emberMat = emberMat;
+
+  // body
+  const body = new THREE.Mesh(new THREE.BoxGeometry(3.2,2.6,5.4), hideMat);
+  body.position.y = 2.6; body.castShadow = true;
+  root.add(body); boss.body = body;
+
+  // back plates + ember cracks
+  for(let i=0;i<4;i++){
+    const pl = new THREE.Mesh(new THREE.ConeGeometry(.55,1.2,4), plateMat);
+    pl.position.set(0, 4.1, 1.6 - i*1.1);
+    pl.castShadow=true; root.add(pl);
+  }
+  for(let i=0;i<5;i++){
+    const cr = new THREE.Mesh(new THREE.BoxGeometry(.15,.5,rand(.8,1.6)), emberMat);
+    cr.position.set(rand(-1.4,1.4), 2.6+rand(-.8,.9), rand(-2.2,2.2));
+    cr.rotation.y = rand(0,3);
+    root.add(cr);
+  }
+
+  // head group (front is -z? define front = +z of root facing dir). We'll say boss faces +z of its yaw.
+  const headG = new THREE.Group();
+  headG.position.set(0, 3.1, 3.1);
+  boss.headG = headG;
+  const skull = new THREE.Mesh(new THREE.BoxGeometry(1.8,1.5,1.9), hideMat);
+  skull.castShadow = true; headG.add(skull);
+  const jaw = new THREE.Mesh(new THREE.BoxGeometry(1.5,.5,1.6), plateMat);
+  jaw.position.set(0,-.85,.3); headG.add(jaw); boss.jaw = jaw;
+  for(const sx of [-1,1]){
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(.17,8,8),
+      new THREE.MeshStandardMaterial({ color:0x000000, emissive:0xffb02e, emissiveIntensity:2 }));
+    eye.position.set(sx*.62,.25,.95); headG.add(eye);
+  }
+  root.add(headG);
+
+  // horns (breakable)
+  boss.parts = [];
+  for(const [sx,name,pip] of [[-1,'Left Horn','pipLH'],[1,'Right Horn','pipRH']]){
+    const horn = new THREE.Group();
+    horn.position.set(sx*.75, .8, .3);
+    const h1 = new THREE.Mesh(new THREE.ConeGeometry(.3,1.6,6), hornMat);
+    h1.rotation.z = -sx*.7; h1.position.set(sx*.5,.55,0);
+    h1.castShadow = true; horn.add(h1);
+    const h2 = new THREE.Mesh(new THREE.ConeGeometry(.18,.9,6), hornMat);
+    h2.rotation.z = -sx*1.15; h2.position.set(sx*1.05,1.0,0);
+    horn.add(h2);
+    headG.add(horn);
+    boss.parts.push({ name, pip, mesh:horn, hp:200, maxHp:200, broken:false, radius:1.5, shardBonus:3 });
+  }
+
+  // tail (breakable) — chain
+  const tailG = new THREE.Group();
+  tailG.position.set(0, 2.7, -2.7);
+  let seg = tailG;
+  boss.tailSegs = [];
+  for(let i=0;i<3;i++){
+    const s = new THREE.Mesh(new THREE.BoxGeometry(.9-.2*i, .9-.2*i, 1.6), hideMat);
+    s.position.z = -1.2; s.castShadow=true;
+    const g2 = new THREE.Group();
+    g2.add(s); g2.position.z = i===0?0:-1.5;
+    seg.add(g2); seg = g2;
+    boss.tailSegs.push(g2);
+  }
+  const stinger = new THREE.Mesh(new THREE.ConeGeometry(.28,1.0,6), hornMat);
+  stinger.rotation.x = Math.PI/2; stinger.position.z=-1.6; seg.add(stinger);
+  root.add(tailG);
+  boss.parts.push({ name:'Tail', pip:'pipTL', mesh:tailG, hp:260, maxHp:260, broken:false, radius:2.2, shardBonus:4 });
+  boss.tailG = tailG;
+
+  // legs
+  boss.legs = [];
+  for(const [sx,sz] of [[-1,1],[1,1],[-1,-1],[1,-1]]){
+    const leg = new THREE.Group();
+    leg.position.set(sx*1.5, 2.2, sz*1.7);
+    const upper = new THREE.Mesh(new THREE.BoxGeometry(.7,1.4,.8), hideMat);
+    upper.position.y = -.6; upper.castShadow=true; leg.add(upper);
+    const lower = new THREE.Mesh(new THREE.BoxGeometry(.55,1.2,.65), plateMat);
+    lower.position.y = -1.6; lower.castShadow=true; leg.add(lower);
+    for(let c=0;c<3;c++){
+      const claw = new THREE.Mesh(new THREE.ConeGeometry(.1,.4,4), hornMat);
+      claw.rotation.x = Math.PI/2;
+      claw.position.set(-.18+c*.18, -2.15, sz>0? .4 : .4);
+      leg.add(claw);
+    }
+    root.add(leg);
+    boss.legs.push(leg);
+  }
+
+  root.position.set(0,0,-10);
+  scene.add(root);
+}
+
+// ------------------------------------------------------------------ boss AI
+const bossAttacks = {
+  swipe:   { windup:.62, active:.22, recover:.7, dmg:20, minPhase:1 },
+  bite:    { windup:.5,  active:.2,  recover:.6, dmg:16, minPhase:1 },
+  tailwhip:{ windup:.55, active:.3,  recover:.6, dmg:18, minPhase:1 },
+  charge:  { windup:.85, active:1.0, recover:.8, dmg:26, minPhase:1 },
+  slam:    { windup:1.05, active:.15, recover:.9, dmg:30, minPhase:2, radius:7 },
+  leap:    { windup:.75, active:.55, recover:.7, dmg:30, minPhase:3, radius:5.5 },
+};
+
+function bossPhaseFor(hp){ const r = hp/boss.maxHp; return r>.66?1 : r>.33?2 : 3; }
+
+function updateBoss(dt){
+  const b = boss;
+  if(!b.alive){
+    b.deadT += dt;
+    // death fall
+    b.root.rotation.z = Math.min(b.deadT*1.2, Math.PI/2*0.9);
+    b.root.position.y = Math.max(-0.6, -b.deadT*0.4);
+    boss.emberMat.emissiveIntensity = Math.max(0, 1.2 - b.deadT*.5);
+    return;
+  }
+
+  const toP = player.root.position.clone().sub(b.root.position); toP.y=0;
+  const dist = toP.length();
+  const targetYaw = Math.atan2(toP.x, toP.z);
+
+  b.stateT += dt;
+
+  // idle walk animation
+  if(b.state==='idle'||b.state==='chase'){
+    b.animT = (b.animT||0) + dt*6;
+    const walk = b.state==='chase'?0.35:0.08;
+    b.legs.forEach((l,i)=>{ l.rotation.x = Math.sin(b.animT + (i%2?Math.PI:0))*walk; });
+    b.tailSegs.forEach((s,i)=>{ s.rotation.y = Math.sin(b.animT*.7+i)*0.25; });
+    b.headG.position.y = 3.1 + Math.sin(b.animT*.8)*.06;
+  }
+
+  if(b.staggerT>0){
+    b.staggerT -= dt;
+    b.root.position.y = Math.abs(Math.sin(b.staggerT*20))*.1;
+    return;
+  }
+
+  switch(b.state){
+    case 'idle': {
+      b.yaw = angleLerp(b.yaw, targetYaw, 1-Math.pow(.01,dt));
+      b.cooldown -= dt;
+      if(dist > 7.5) { b.state='chase'; break; }
+      if(b.cooldown<=0) pickAttack(dist, targetYaw);
+      break;
+    }
+    case 'chase': {
+      b.yaw = angleLerp(b.yaw, targetYaw, 1-Math.pow(.01,dt));
+      const spd = 5.5 + b.phase*1.2;
+      b.root.position.add(V3(Math.sin(b.yaw),0,Math.cos(b.yaw)).multiplyScalar(spd*dt));
+      b.cooldown -= dt;
+      if(dist <= 7 && b.cooldown<=0) pickAttack(dist, targetYaw);
+      else if(dist<=6.5) b.state='idle';
+      // mid-range charge chance
+      if(dist>12 && b.cooldown<=0) pickAttack(dist, targetYaw);
+      break;
+    }
+    case 'attack': updateBossAttack(dt, dist, targetYaw); break;
+    case 'roar': {
+      b.headG.rotation.x = -0.5 + Math.sin(b.stateT*25)*.05;
+      b.jaw.rotation.x = 0.6;
+      if(b.stateT>1.4){ b.state='idle'; b.cooldown=.8; b.headG.rotation.x=0; b.jaw.rotation.x=0; }
+      break;
+    }
+  }
+}
+
+function pickAttack(dist, targetYaw){
+  const b = boss;
+  // player behind?
+  let rel = (Math.atan2(player.root.position.x-b.root.position.x, player.root.position.z-b.root.position.z) - b.yaw)%TAU;
+  if(rel>Math.PI)rel-=TAU; if(rel<-Math.PI)rel+=TAU;
+  const behind = Math.abs(rel) > 2.2;
+
+  const pool = [];
+  if(behind && dist<7) pool.push('tailwhip','tailwhip');
+  if(dist<6){ pool.push('swipe','swipe','bite'); if(b.phase>=2) pool.push('slam'); }
+  if(dist>=6){ pool.push('charge','charge'); if(b.phase>=3) pool.push('leap','leap'); if(b.phase>=2&&dist<10) pool.push('slam'); }
+  if(!pool.length) pool.push('charge');
+  const name = pool[Math.floor(Math.random()*pool.length)];
+  startBossAttack(name, targetYaw);
+}
+
+let telegraphs = [];
+function addTelegraph(kind, opts){
+  let mesh;
+  const mat = new THREE.MeshBasicMaterial({ color:0xff2a1a, transparent:true, opacity:.32, depthWrite:false });
+  if(kind==='circle'){
+    mesh = new THREE.Mesh(new THREE.CircleGeometry(opts.r, 40), mat);
+    mesh.position.copy(opts.pos); mesh.position.y = .12;
+    mesh.rotation.x = -Math.PI/2;
+  } else if(kind==='line'){
+    mesh = new THREE.Mesh(new THREE.PlaneGeometry(opts.w, opts.len), mat);
+    mesh.rotation.x = -Math.PI/2;
+    mesh.rotation.z = -opts.yaw;
+    const fwd = V3(Math.sin(opts.yaw),0,Math.cos(opts.yaw));
+    mesh.position.copy(opts.pos).add(fwd.multiplyScalar(opts.len/2));
+    mesh.position.y = .12;
+  } else { // arc (sector approximation: partial circle)
+    mesh = new THREE.Mesh(new THREE.CircleGeometry(opts.r, 24, -opts.spread/2, opts.spread), mat);
+    mesh.position.copy(opts.pos); mesh.position.y=.12;
+    mesh.rotation.x = -Math.PI/2;
+    mesh.rotation.z = -(opts.yaw - Math.PI/2);
+  }
+  mesh.userData.life = opts.life;
+  mesh.userData.t = 0;
+  scene.add(mesh);
+  telegraphs.push(mesh);
+  return mesh;
+}
+function updateTelegraphs(dt){
+  for(let i=telegraphs.length-1;i>=0;i--){
+    const m = telegraphs[i];
+    m.userData.t += dt;
+    m.material.opacity = .18 + .2*Math.sin(m.userData.t*14);
+    if(m.userData.t >= m.userData.life){
+      scene.remove(m); telegraphs.splice(i,1);
+    }
+  }
+}
+
+function startBossAttack(name, targetYaw){
+  const b = boss;
+  const def = bossAttacks[name];
+  b.state='attack'; b.stateT=0;
+  b.attackName = name; b.attackDef = def;
+  b.attackPhase = 'windup';
+  b.didDamage = false;
+  b.yaw = targetYaw;
+
+  const pos = b.root.position.clone();
+  if(name==='swipe') addTelegraph('arc',{ pos, r:6.5, spread:2.0, yaw:b.yaw, life:def.windup });
+  if(name==='bite')  addTelegraph('arc',{ pos, r:5.5, spread:1.1, yaw:b.yaw, life:def.windup });
+  if(name==='tailwhip') addTelegraph('arc',{ pos, r:6.5, spread:2.6, yaw:b.yaw+Math.PI, life:def.windup });
+  if(name==='charge'){
+    b.chargeDir = V3(Math.sin(b.yaw),0,Math.cos(b.yaw));
+    addTelegraph('line',{ pos, w:4.5, len:26, yaw:b.yaw, life:def.windup });
+  }
+  if(name==='slam') addTelegraph('circle',{ pos, r:def.radius, life:def.windup });
+  if(name==='leap'){
+    b.leapTarget = player.root.position.clone();
+    addTelegraph('circle',{ pos:b.leapTarget, r:def.radius, life:def.windup+def.active*.6 });
+    b.leapStart = b.root.position.clone();
+  }
+}
+
+function updateBossAttack(dt, dist, targetYaw){
+  const b = boss, def = b.attackDef, n = b.attackName;
+  const t = b.stateT;
+
+  // ----- windup poses
+  if(b.attackPhase==='windup'){
+    const w = t/def.windup;
+    if(n==='swipe'){ b.root.rotation.z = -.22*w; b.legs[0].rotation.x = -1.0*w; }
+    if(n==='bite'){ b.headG.rotation.x = -.5*w; b.jaw.rotation.x = .8*w; }
+    if(n==='tailwhip'){ b.tailG.rotation.y = 1.2*w; }
+    if(n==='charge'){ b.root.position.y = Math.abs(Math.sin(t*22))*.08; b.headG.rotation.x = -.3*w; }
+    if(n==='slam'){ b.root.position.y = 1.6*w; }
+    if(n==='leap'){ b.root.rotation.x = -.25*w; b.root.position.y = .5*w; }
+    // slight tracking during windup (except charge/leap which locked)
+    if(n==='swipe'||n==='bite') b.yaw = angleLerp(b.yaw, targetYaw, 1-Math.pow(.2,dt));
+    if(t>=def.windup){ b.attackPhase='active'; b.stateT=0; }
+    return;
+  }
+
+  // ----- active
+  if(b.attackPhase==='active'){
+    const a = t/def.active;
+    if(n==='swipe'){
+      b.root.rotation.z = -.22 + .5*a;
+      b.legs[0].rotation.x = -1.0 + 2.2*a;
+      if(!b.didDamage) tryHitPlayerArc(6.5, 2.2, b.yaw, def.dmg);
+    }
+    if(n==='bite'){
+      b.headG.rotation.x = -.5 + 1.1*a; b.jaw.rotation.x = .8 - .8*a;
+      if(!b.didDamage) tryHitPlayerArc(5.5, 1.3, b.yaw, def.dmg);
+    }
+    if(n==='tailwhip'){
+      b.tailG.rotation.y = 1.2 - 3.4*a;
+      if(!b.didDamage) tryHitPlayerArc(6.5, 2.8, b.yaw+Math.PI, def.dmg);
+    }
+    if(n==='charge'){
+      b.root.position.add(b.chargeDir.clone().multiplyScalar(26*dt));
+      b.root.position.y = 0;
+      if(!b.didDamage){
+        const d2 = player.root.position.clone().sub(b.root.position); d2.y=0;
+        if(d2.length()<3.6) hitPlayer(def.dmg, b.chargeDir);
+      }
+      // stop at arena edge
+      const dd = Math.hypot(b.root.position.x, b.root.position.z);
+      if(dd > ARENA_R-3){ b.stateT = def.active; }
+    }
+    if(n==='slam'){
+      b.root.position.y = Math.max(0, 1.6 - 8*t);
+      if(!b.didDamage && b.root.position.y<=0.05){
+        shockwave(b.root.position.clone(), def.radius);
+        const d2 = player.root.position.clone().sub(b.root.position); d2.y=0;
+        if(d2.length() < def.radius) hitPlayer(def.dmg, d2.normalize());
+        b.didDamage = true;
+        shake(.35,.5);
+      }
+    }
+    if(n==='leap'){
+      const k = clamp(a,0,1);
+      b.root.position.lerpVectors(b.leapStart, b.leapTarget, k);
+      b.root.position.y = Math.sin(k*Math.PI)*5;
+      b.root.rotation.x = -.25 + .25*k;
+      if(!b.didDamage && k>=1){
+        shockwave(b.leapTarget.clone(), def.radius);
+        const d2 = player.root.position.clone().sub(b.leapTarget); d2.y=0;
+        if(d2.length() < def.radius) hitPlayer(def.dmg, d2.normalize());
+        b.didDamage = true;
+        shake(.35,.5);
+      }
+    }
+    if(t>=def.active){ b.attackPhase='recover'; b.stateT=0; b.root.position.y=0; }
+    return;
+  }
+
+  // ----- recover
+  if(b.attackPhase==='recover'){
+    const r = 1 - t/def.recover;
+    if(n==='swipe'){ b.root.rotation.z = .28*r; b.legs[0].rotation.x = 1.2*r; }
+    if(n==='bite'){ b.headG.rotation.x = .6*r; }
+    if(n==='tailwhip'){ b.tailG.rotation.y = -2.2*r; }
+    if(n==='leap'){ b.root.rotation.x = 0; }
+    if(t>=def.recover){
+      b.state='idle'; b.stateT=0;
+      b.root.rotation.z=0; b.headG.rotation.x=0; b.jaw.rotation.x=0; b.tailG.rotation.y=0;
+      b.legs.forEach(l=>l.rotation.x=0);
+      b.cooldown = rand(1.6,2.6) - b.phase*.35;
+    }
+  }
+}
+
+function tryHitPlayerArc(radius, spread, yaw, dmg){
+  const b = boss;
+  const to = player.root.position.clone().sub(b.root.position); to.y=0;
+  const d = to.length();
+  if(d > radius) return;
+  let rel = (Math.atan2(to.x,to.z) - yaw)%TAU;
+  if(rel>Math.PI)rel-=TAU; if(rel<-Math.PI)rel+=TAU;
+  if(Math.abs(rel) <= spread/2){
+    hitPlayer(dmg, to.normalize());
+  }
+}
+
+function hitPlayer(dmg, knockDir){
+  if(player.iframes>0 || player.state==='dead') return;
+  boss.didDamage = true;
+  player.hp -= dmg;
+  player.state='hitstun'; player.stateT=0;
+  player.iframes = .6;
+  player.root.position.add(knockDir.clone().multiplyScalar(1.6));
+  spawnDmgNum(player.root.position.clone().add(V3(0,3,0)), '-'+dmg, '#ff6a5a');
+  burst(player.root.position.clone().add(V3(0,1.5,0)), 0xff5a3a, 10);
+  shake(.3,.4);
+  vignette();
+  if(player.hp<=0){
+    player.hp=0; player.state='dead';
+    endFight(false);
+  }
+}
+
+// ------------------------------------------------------------------ melee hit vs boss & parts
+function meleeHitCheck(dmg, heavy){
+  if(!boss.alive) return false;
+  const reach = heavy?3.2:2.8;
+  const hitPos = player.root.position.clone()
+    .add(V3(Math.sin(player.yaw),0,Math.cos(player.yaw)).multiplyScalar(2.2))
+    .add(V3(0,1.6,0));
+
+  // check parts first
+  let hitPart = null, best = 1e9;
+  const wp = V3();
+  for(const part of boss.parts){
+    if(part.broken) continue;
+    part.mesh.getWorldPosition(wp);
+    const d = wp.distanceTo(hitPos);
+    if(d < part.radius + reach*0.55 && d < best){ best = d; hitPart = part; }
+  }
+  // body check
+  const bodyPos = boss.root.position.clone().add(V3(0,2.6,0));
+  const bodyDist = bodyPos.distanceTo(hitPos);
+  const hitBody = bodyDist < 3.4 + reach*0.5;
+  if(!hitPart && !hitBody) return false;
+
+  let total = dmg;
+  let col = '#ffd9a0';
+  if(hitPart){
+    hitPart.hp -= dmg;
+    total = Math.round(dmg*1.25); // part bonus
+    col = '#ffe66e';
+    if(hitPart.hp<=0) breakPart(hitPart);
+  }
+  damageBoss(total);
+  const fxPos = hitPart ? hitPart.mesh.getWorldPosition(V3()) : hitPos;
+  spawnDmgNum(fxPos.clone().add(V3(rand(-.4,.4),rand(.2,.8),0)), ''+total, col, heavy);
+  burst(fxPos, hitPart?0xffe66e:0xffb27a, heavy?16:8);
+  hitstop(heavy?.09:.05);
+  shake(heavy?.22:.1, heavy?.35:.2);
+  return true;
+}
+
+function damageBoss(v){
+  if(!boss.alive) return;
+  boss.hp -= v;
+  const np = bossPhaseFor(boss.hp);
+  if(boss.hp<=0){
+    boss.hp=0; boss.alive=false; boss.deadT=0;
+    endFight(true);
+    return;
+  }
+  if(np !== boss.phase){
+    boss.phase = np;
+    boss.state='roar'; boss.stateT=0;
+    boss.root.rotation.z=0; boss.root.position.y=0;
+    boss.emberMat.emissiveIntensity = 1.2 + np*.6;
+    centerMsg(np===2 ? 'GRAVEMAW IS ENRAGED' : 'GRAVEMAW BURNS WITH FURY');
+    phaseFlash();
+    shake(.5,.8);
+    // roar pushback
+    const away = player.root.position.clone().sub(boss.root.position); away.y=0;
+    if(away.length()<9) player.root.position.add(away.normalize().multiplyScalar(2.5));
+  }
+  updateBossUI();
+}
+
+function breakPart(part){
+  part.broken = true;
+  // detach and drop
+  const wp = part.mesh.getWorldPosition(V3());
+  const wq = part.mesh.getWorldQuaternion(new THREE.Quaternion());
+  part.mesh.parent.remove(part.mesh);
+  part.mesh.position.copy(wp);
+  part.mesh.quaternion.copy(wq);
+  scene.add(part.mesh);
+  debris.push({ mesh:part.mesh, vel:V3(rand(-3,3),7,rand(-3,3)), rot:V3(rand(-4,4),rand(-4,4),rand(-4,4)), t:0 });
+  // rewards
+  damageBoss(60);
+  boss.staggerT = 1.4;
+  spawnShards(wp, part.shardBonus);
+  centerMsg(part.name.toUpperCase()+' SEVERED!');
+  document.getElementById(part.pip).classList.add('broken');
+  burst(wp, 0xffe66e, 26);
+  hitstop(.14); shake(.4,.6);
+}
+
+// ------------------------------------------------------------------ pickups / debris / fx
+let debris = [], shardsFx = [], particles = [], dmgNums = [];
+
+function spawnShards(pos, n){
+  const mat = new THREE.MeshStandardMaterial({ color:0x7ce0ff, emissive:0x2fa8d8, emissiveIntensity:1.4, roughness:.3 });
+  for(let i=0;i<n;i++){
+    const m = new THREE.Mesh(new THREE.OctahedronGeometry(.28,0), mat);
+    m.position.copy(pos).add(V3(rand(-1.4,1.4), .5, rand(-1.4,1.4)));
+    m.position.y = .5;
+    scene.add(m);
+    shardsFx.push(m);
+  }
+}
+function updateShards(dt, t){
+  for(let i=shardsFx.length-1;i>=0;i--){
+    const m = shardsFx[i];
+    m.rotation.y += dt*3;
+    m.position.y = .5 + Math.sin(t*3 + i)*.15;
+    const d = m.position.clone().setY(0).distanceTo(player.root.position.clone().setY(0));
+    if(d < 1.6){
+      scene.remove(m); shardsFx.splice(i,1);
+      player.shards++;
+      document.getElementById('shards').textContent = 'Shards: '+player.shards;
+      spawnDmgNum(player.root.position.clone().add(V3(0,2.6,0)), '+shard', '#7ce0ff');
+    }
+  }
+}
+function updateDebris(dt){
+  for(const d of debris){
+    d.t += dt;
+    if(d.mesh.position.y>0.3 || d.vel.y>0){
+      d.vel.y -= 22*dt;
+      d.mesh.position.add(d.vel.clone().multiplyScalar(dt));
+      d.mesh.rotation.x += d.rot.x*dt; d.mesh.rotation.z += d.rot.z*dt;
+      if(d.mesh.position.y<0.3){ d.mesh.position.y=0.3; d.vel.set(0,0,0); }
+    }
+  }
+}
+
+function burst(pos, color, n){
+  const mat = new THREE.MeshBasicMaterial({ color, transparent:true, opacity:1 });
+  for(let i=0;i<n;i++){
+    const m = new THREE.Mesh(new THREE.BoxGeometry(.12,.12,.12), mat.clone());
+    m.position.copy(pos);
+    particles.push({ mesh:m, vel:V3(rand(-6,6),rand(2,9),rand(-6,6)), life:rand(.35,.7), t:0 });
+    scene.add(m);
+  }
+}
+function shockwave(pos, r){
+  const ring = new THREE.Mesh(new THREE.RingGeometry(.3,.7,32),
+    new THREE.MeshBasicMaterial({ color:0xffa04a, transparent:true, opacity:.9, side:THREE.DoubleSide }));
+  ring.rotation.x = -Math.PI/2;
+  ring.position.copy(pos); ring.position.y=.15;
+  scene.add(ring);
+  particles.push({ mesh:ring, ring:true, targetR:r, life:.45, t:0 });
+  burst(pos, 0xffa04a, 14);
+}
+function updateParticles(dt){
+  for(let i=particles.length-1;i>=0;i--){
+    const p = particles[i];
+    p.t += dt;
+    if(p.ring){
+      const k = p.t/p.life;
+      p.mesh.scale.setScalar(1 + k*p.targetR*2.2);
+      p.mesh.material.opacity = .9*(1-k);
+    } else {
+      p.vel.y -= 18*dt;
+      p.mesh.position.add(p.vel.clone().multiplyScalar(dt));
+      p.mesh.material.opacity = 1 - p.t/p.life;
+    }
+    if(p.t>=p.life){ scene.remove(p.mesh); particles.splice(i,1); }
+  }
+}
+
+// damage numbers (canvas sprites)
+function spawnDmgNum(pos, text, color, big){
+  const cv = document.createElement('canvas');
+  cv.width=160; cv.height=72;
+  const cx = cv.getContext('2d');
+  cx.font = (big?'bold 46px':'bold 34px')+' Arial';
+  cx.textAlign='center';
+  cx.fillStyle='rgba(0,0,0,.6)';
+  cx.fillText(text, 82, 48);
+  cx.fillStyle=color;
+  cx.fillText(text, 80, 46);
+  const tex = new THREE.CanvasTexture(cv);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map:tex, transparent:true }));
+  sp.scale.set(big?3:2.2, big?1.35:1, 1);
+  sp.position.copy(pos);
+  scene.add(sp);
+  dmgNums.push({ sp, t:0, life:.9 });
+}
+function updateDmgNums(dt){
+  for(let i=dmgNums.length-1;i>=0;i--){
+    const d = dmgNums[i];
+    d.t += dt;
+    d.sp.position.y += dt*1.6;
+    d.sp.material.opacity = 1 - (d.t/d.life)*(d.t/d.life);
+    if(d.t>=d.life){ scene.remove(d.sp); dmgNums.splice(i,1); }
+  }
+}
+
+// ------------------------------------------------------------------ feedback helpers
+function hitstop(t){ hitstopT = Math.max(hitstopT, t); }
+function shake(dur, amp){ shakeT = Math.max(shakeT, dur); shakeAmp = amp; }
+function vignette(){
+  const v = document.getElementById('vignette');
+  v.style.boxShadow = 'inset 0 0 180px rgba(200,20,20,.55)';
+  setTimeout(()=>v.style.boxShadow='inset 0 0 180px rgba(200,20,20,0)', 260);
+}
+function phaseFlash(){
+  const f = document.getElementById('phaseFlash');
+  f.style.background = 'rgba(255,90,20,.22)';
+  setTimeout(()=>f.style.background='rgba(255,90,20,0)', 450);
+}
+let msgTimer=null;
+function centerMsg(t){
+  const el = document.getElementById('centerMsg');
+  el.textContent = t; el.style.opacity = 1;
+  clearTimeout(msgTimer);
+  msgTimer = setTimeout(()=>el.style.opacity=0, 2200);
+}
+function flashStamina(){
+  const el = document.getElementById('stFill');
+  el.style.background = '#ff5a4a';
+  setTimeout(()=>el.style.background='linear-gradient(90deg,#d9a52a,#ffe089)', 200);
+}
+
+// ------------------------------------------------------------------ UI
+function updateBarsUI(){
+  document.getElementById('hpFill').style.width = (player.hp/player.maxHp*100)+'%';
+  document.getElementById('stFill').style.width = (player.st/player.maxSt*100)+'%';
+}
+function updateBossUI(){
+  document.getElementById('bossFill').style.width = (boss.hp/boss.maxHp*100)+'%';
+}
+function updateFlaskUI(){
+  document.getElementById('flasks').textContent = 'Flasks: '+('◈ '.repeat(player.flasks) || '—')+' (Q)';
+}
+
+function bindUI(){
+  document.getElementById('startBtn').onclick = startFight;
+  document.getElementById('retryBtn').onclick = ()=>location.reload();
+  document.getElementById('againBtn').onclick = ()=>location.reload();
+}
+function startFight(){
+  gameState='fight';
+  document.getElementById('titleScreen').classList.add('hidden');
+  document.getElementById('bossPanel').classList.remove('hidden');
+  try {
+    renderer.domElement.requestPointerLock();
+  } catch (e) {
+    console.warn("Pointer lock failed or not supported:", e);
+  }
+  centerMsg('GRAVEMAW APPROACHES');
+}
+function endFight(won){
+  if(won){
+    gameState='carve';
+    centerMsg('BAHIMUT FELLED');
+    spawnShards(boss.root.position.clone(), 5);
+  } else {
+    gameState='dead';
+    document.exitPointerLock();
+    setTimeout(()=>{
+      document.getElementById('deathScreen').classList.remove('hidden');
+    }, 1200);
+  }
+}
+function doCarve(){
+  gameState='victory';
+  document.exitPointerLock();
+  const broken = boss.parts.filter(p=>p.broken);
+  let loot = [];
+  loot.push('◆ Gravemaw Emberhide ×3');
+  loot.push('◆ Shardlight Fragments ×'+player.shards);
+  for(const p of broken){
+    if(p.name.includes('Horn')) loot.push('◆ Severed '+p.name+' — <i>rare horn material</i>');
+    else loot.push('◆ Gravemaw Tailspike — <i>rare tail material</i>');
+  }
+  if(broken.length===boss.parts.length) loot.push('★ PERFECT HUNT — Bahimut Core ×1');
+  document.getElementById('lootList').innerHTML = loot.join('<br>');
+  document.getElementById('victoryScreen').classList.remove('hidden');
+}
+
+// ------------------------------------------------------------------ main loop
+function animate(){
+  requestAnimationFrame(animate);
+  let dt = Math.min(clock.getDelta(), 1/20);
+
+  // hitstop
+  if(hitstopT>0){ hitstopT -= dt; timeScale = .06; }
+  else timeScale = 1;
+  const sdt = dt*timeScale;
+
+  // camera from mouse
+  if(pointerLocked){
+    cam.yaw   -= mouseDX*0.0026;
+    cam.pitch  = clamp(cam.pitch + mouseDY*0.0022, -0.15, 1.05);
+  }
+  mouseDX=0; mouseDY=0;
+  shakeT = Math.max(0, shakeT-dt);
+
+  if(gameState==='fight' || gameState==='carve'){
+    updatePlayer(sdt);
+    updateBoss(sdt);
+    updateTelegraphs(sdt);
+
+    // carve prompt
+    if(gameState==='carve'){
+      const d = player.root.position.distanceTo(boss.root.position);
+      const pm = document.getElementById('promptMsg');
+      if(d<7){ pm.textContent='[E] Carve the Bahimut'; pm.style.opacity=1; }
+      else { pm.style.opacity=0; }
+    }
+    // keep boss & player separated (body block)
+    if(boss.alive && boss.state!=='attack'){
+      const sep = player.root.position.clone().sub(boss.root.position); sep.y=0;
+      const d = sep.length();
+      if(d < 3.4 && d>0.01) player.root.position.add(sep.normalize().multiplyScalar((3.4-d)));
+    }
+    // keep boss in arena
+    const bd = Math.hypot(boss.root.position.x, boss.root.position.z);
+    if(bd > ARENA_R-3){ const s=(ARENA_R-3)/bd; boss.root.position.x*=s; boss.root.position.z*=s; }
+    boss.root.rotation.y = boss.yaw;
+  }
+  else if(gameState==='dead'){
+    updateBoss(sdt);
+    // player fall over
+    player.model.rotation.x = Math.min((player.model.rotation.x||0)+sdt*2, Math.PI/2);
+  }
+
+  updateParticles(sdt);
+  updateDmgNums(sdt);
+  updateShards(sdt, clock.elapsedTime);
+  updateDebris(sdt);
+  updateCamera(dt);
+
+  renderer.render(scene, camera);
+}
+
+init();
+</script>
+</body>
+</html>

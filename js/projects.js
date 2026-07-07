@@ -438,6 +438,25 @@ const PROJECTS = [
       "https://happysingh3d.github.io/block-city-mayhem/"
     ],
     "liveUrl": "https://happysingh3d.github.io/block-city-mayhem/"
+  },
+  {
+    "id": "proj-game-002",
+    "title": "Shardfall \u2014 3D Bahimut Hunt Prototype",
+    "category": "interactive",
+    "tags": [
+      "3D Game Development",
+      "Three.js",
+      "Web Graphics",
+      "Interactive"
+    ],
+    "coverImage": "thumbnails/shardfall_cover.png",
+    "description": "Shardfall is an action-packed 3D monster hunting game prototype built with Three.js. Play as a Warden, dodge attacks, sever parts like horns and tail for bonuses, and fell the mighty Ember Bahimut, Gravemaw.",
+    "client": "Personal Project",
+    "year": "2026",
+    "media": [
+      "shardfall/index.html"
+    ],
+    "liveUrl": "shardfall/index.html"
   }
 ];
 
@@ -453,6 +472,7 @@ function isIframeMedia(url) {
     lower.includes("youtu.be") ||
     lower.includes("/embed") ||
     lower.includes("sketchfab.com/models") ||
-    lower.includes("block-city-mayhem")
+    lower.includes("block-city-mayhem") ||
+    lower.includes("shardfall")
   );
 }
