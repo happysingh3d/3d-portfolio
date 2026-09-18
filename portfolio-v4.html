@@ -274,7 +274,7 @@ section{padding:100px 80px;position:relative;z-index:1;}
   aspect-ratio:4/3;
 }
 .model-card.tall{aspect-ratio:3/4;}
-.model-card.wide{grid-column:span 2;aspect-ratio:16/6;}
+.model-card.wide{grid-column:span 2;width:100%;aspect-ratio:16/6;max-height:400px;}
 
 .model-thumb{
   width:100%;height:100%;
@@ -497,7 +497,7 @@ section{padding:100px 80px;position:relative;z-index:1;}
 .project-card:hover{transform:translateY(-3px);}
 
 .card-media{
-  width:100%;aspect-ratio:16/7.5;position:relative;overflow:hidden;
+  width:100%;aspect-ratio:16/7.5;max-height:420px;position:relative;overflow:hidden;
   background:var(--bg3);background-size:cover;background-position:center;
 }
 .card-media iframe{
@@ -661,7 +661,7 @@ footer span.hi{color:var(--gray);}
   #about{grid-template-columns:1fr;}
   .craft-header{grid-template-columns:1fr;}
   .craft-grid{grid-template-columns:1fr;}
-  .model-card.wide{grid-column:span 1;aspect-ratio:4/3;}
+  .model-card.wide{grid-column:span 1;aspect-ratio:4/3;max-height:320px;}
   #work-wrap{grid-template-columns:1fr;}
   .work-panel{position:static;height:auto;}
   .work-left{padding:60px 28px;}
@@ -833,7 +833,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card wide reveal"
          data-title="STUARD"
          data-title-b="CHARACTER"
-         data-num="01 / 06"
+         data-num="01 / 03"
          data-cat="CHARACTER MODELING"
          data-subtitle="Maya · ZBrush · Substance Painter"
          data-desc="High-resolution character model built in ZBrush, retopologized in Maya to game-ready polycount. PBR textures created in Substance Painter with albedo, roughness, metallic and normal maps."
@@ -851,13 +851,12 @@ footer span.hi{color:var(--gray);}
         <div class="model-meta">Maya · ZBrush · Substance Painter · ~18.5K tris</div>
         <div class="model-cta">INSPECT →</div>
       </div>
-    </div>
 
     <!-- CARD 2 -->
     <div class="model-card reveal"
          data-title="GAME ASSET"
          data-title-b="PACK"
-         data-num="02 / 06"
+         data-num="02 / 03"
          data-cat="PROP MODELING"
          data-subtitle="Maya · Substance Painter"
          data-desc="Game-ready hard-surface prop pack optimized for real-time rendering. Low-poly meshes with baked normal maps from high-poly source geometry."
@@ -874,38 +873,12 @@ footer span.hi{color:var(--gray);}
         <div class="model-meta">Maya · Substance Painter · ~6.2K tris</div>
         <div class="model-cta">INSPECT →</div>
       </div>
-    </div>
-
-    <!-- CARD 3 — placeholder (waiting for render) -->
-    <div class="model-card placeholder reveal"
-         data-title="YOUR MODEL"
-         data-title-b="TITLE"
-         data-num="03 / 06"
-         data-cat="MODELING"
-         data-subtitle="Maya · Substance Painter"
-         data-desc="Add your render PNG here. Export from Maya, host on GitHub or Google Drive, paste the URL below."
-         data-software="Maya"
-         data-polycount="—"
-         data-textures="—"
-         data-software2="—">
-      <div class="model-thumb"></div>
-      <div class="ph-center">
-        <div class="ph-icon-lg">🗿</div>
-        <div class="ph-label">REPLACE WITH<br>YOUR RENDER PNG</div>
-      </div>
-      <div class="model-badge">ADD RENDER</div>
-      <div class="model-overlay">
-        <div class="model-cat">MODELING</div>
-        <div class="model-name">YOUR <strong>MODEL</strong></div>
-        <div class="model-cta">INSPECT →</div>
-      </div>
-    </div>
 
     <!-- CARD 4 -->
     <div class="model-card reveal"
          data-title="CHARACTER"
          data-title-b="WIREFRAME"
-         data-num="04 / 06"
+         data-num="03 / 03"
          data-cat="RETOPOLOGY"
          data-subtitle="ZBrush · Maya"
          data-desc="Clean edge-flow retopology from high-res ZBrush sculpt. Topology optimized for deformation at joints, ready for rigging and animation."
@@ -922,57 +895,6 @@ footer span.hi{color:var(--gray);}
         <div class="model-meta">ZBrush → Maya · ~12K tris</div>
         <div class="model-cta">INSPECT →</div>
       </div>
-    </div>
-
-    <!-- CARD 5 — placeholder -->
-    <div class="model-card placeholder reveal"
-         data-title="TEXTURE"
-         data-title-b="BREAKDOWN"
-         data-num="05 / 06"
-         data-cat="TEXTURING"
-         data-subtitle="Substance Painter"
-         data-desc="PBR texture breakdown — albedo, normal, roughness/metallic and AO channels. Add your texture sheet screenshot here."
-         data-software="Substance Painter"
-         data-polycount="—"
-         data-textures="4K PBR Maps"
-         data-software2="—">
-      <div class="model-thumb"></div>
-      <div class="ph-center">
-        <div class="ph-icon-lg">🎨</div>
-        <div class="ph-label">ADD TEXTURE<br>BREAKDOWN RENDER</div>
-      </div>
-      <div class="model-badge">TEXTURING</div>
-      <div class="model-overlay">
-        <div class="model-cat">TEXTURING</div>
-        <div class="model-name">TEXTURE <strong>BREAKDOWN</strong></div>
-        <div class="model-cta">INSPECT →</div>
-      </div>
-    </div>
-
-    <!-- CARD 6 — placeholder -->
-    <div class="model-card placeholder reveal"
-         data-title="ENVIRONMENT"
-         data-title-b="ASSET"
-         data-num="06 / 06"
-         data-cat="ENVIRONMENT"
-         data-subtitle="Maya · Substance Painter · Unity"
-         data-desc="Environment asset set optimized for real-time rendering in Unity. LOD setup, lightmap UVs baked for static lighting."
-         data-software="Maya · Unity"
-         data-polycount="—"
-         data-textures="2K PBR Maps + Lightmap"
-         data-software2="Unity (scene integration)">
-      <div class="model-thumb"></div>
-      <div class="ph-center">
-        <div class="ph-icon-lg">🏔️</div>
-        <div class="ph-label">ADD ENVIRONMENT<br>RENDER HERE</div>
-      </div>
-      <div class="model-badge">ENVIRONMENT</div>
-      <div class="model-overlay">
-        <div class="model-cat">ENVIRONMENT</div>
-        <div class="model-name">ENVIRONMENT <strong>ASSET</strong></div>
-        <div class="model-cta">INSPECT →</div>
-      </div>
-    </div>
 
   </div><!-- /craft-grid -->
 </div><!-- /craft -->
