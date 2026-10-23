@@ -674,7 +674,8 @@ footer span.hi{color:var(--gray);}
   .lb-info{border-left:none;border-top:1px solid var(--border);}
   footer{padding:20px 28px;flex-direction:column;gap:10px;text-align:center;}
 }
-  </style>
+  .lb-views{position:absolute;left:14px;bottom:14px;display:flex;gap:8px;z-index:2}.lb-view{all:unset;cursor:pointer;width:84px;border:1px solid var(--border);opacity:.6;background:var(--bg2);transition:opacity .2s,border-color .2s}.lb-view:hover{opacity:.9}.lb-view.on{opacity:1;border-color:var(--gold)}.lb-view img{display:block;width:100%}@media(max-width:700px){.lb-view{width:60px}}
+</style>
 </head>
 <body>
 
@@ -818,12 +819,12 @@ footer span.hi{color:var(--gray);}
     </div>
     <div>
       <p class="craft-desc reveal">
-        Game-ready assets built polygon by polygon — from base mesh through ZBrush sculpting,
-        retopology, UV unwrap, and PBR texturing in Substance Painter.
+        Game assets for Project Frontier, my first-person survival game in Unity. AI-assisted: generated in Tripo,
+        then curated, textured, set to real-world scale and set up for Unity with LODs and PBR maps. Rendered in Blender Cycles.
       </p>
       <p class="craft-note reveal" style="margin-top:20px;">
         CLICK ANY IMAGE TO INSPECT<br>
-        WIREFRAMES · TEXTURE MAPS · SPECS
+        THREE ANGLES · TEXTURES · SPECS
       </p>
     </div>
   </div>
@@ -834,77 +835,225 @@ footer span.hi{color:var(--gray);}
   ══ -->
   <div class="craft-grid">
 
-    <!-- CARD 1 — featured wide (replace with your best render) -->
     <div class="model-card wide reveal"
-         data-title="STUARD"
-         data-title-b="CHARACTER"
-         data-num="01 / 03"
-         data-cat="CHARACTER MODELING"
-         data-subtitle="Maya · ZBrush · Substance Painter"
-         data-desc="High-resolution character model built in ZBrush, retopologized in Maya to game-ready polycount. PBR textures created in Substance Painter with albedo, roughness, metallic and normal maps."
-         data-software="Maya · ZBrush · Substance Painter"
-         data-polycount="~18,500 tris"
-         data-textures="4K PBR — Albedo / Normal / Roughness / AO"
-         data-software2="Marmoset Toolbag (render)">
-      <div class="model-thumb"
-           style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/game-showcase-rough-edition_LISIzno5-ft.png');
-                  background-position:center 30%;"></div>
-      <div class="model-badge">FEATURED</div>
+         data-title="WORKSHOP" data-title-b="SHED" data-num="01 / 12" data-cat="BUILDING"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Corrugated workshop shed with a roll-up door: the centre of the maintenance yard. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="10,748 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-workshop-shed-a.webp|thumbnails/frontier/pf-workshop-shed-b.webp|thumbnails/frontier/pf-workshop-shed-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-workshop-shed-a.webp');"></div>
+      <div class="model-badge">BUILDING</div>
       <div class="model-overlay">
-        <div class="model-cat">CHARACTER MODELING</div>
-        <div class="model-name">STUARD <strong>CHARACTER</strong></div>
-        <div class="model-meta">Maya · ZBrush · Substance Painter · ~18.5K tris</div>
+        <div class="model-cat">BUILDING</div>
+        <div class="model-name">WORKSHOP <strong>SHED</strong></div>
+        <div class="model-meta">10.7K tris · about 6.08 × 5.62 m</div>
         <div class="model-cta">INSPECT →</div>
       </div>
-    </div><!-- /model-card CARD 1 -->
-
-    <!-- CARD 2 -->
+    </div>
     <div class="model-card reveal"
-         data-title="GAME ASSET"
-         data-title-b="PACK"
-         data-num="02 / 03"
-         data-cat="PROP MODELING"
-         data-subtitle="Maya · Substance Painter"
-         data-desc="Game-ready hard-surface prop pack optimized for real-time rendering. Low-poly meshes with baked normal maps from high-poly source geometry."
-         data-software="Maya · Substance Painter"
-         data-polycount="~6,200 tris avg."
-         data-textures="2K PBR — Albedo / Normal / Roughness"
-         data-software2="Unity (integration)">
-      <div class="model-thumb"
-           style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/game-showcase-rough-edition_LISIzno5-ft.png');"></div>
-      <div class="model-badge">PROPS</div>
+         data-title="PICKUP" data-title-b="TRUCK" data-num="02 / 12" data-cat="VEHICLE"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Rusted pickup with a roll cage and light bar, one of the wrecks on the roads. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="31,146 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-pickup-truck-a.webp|thumbnails/frontier/pf-pickup-truck-b.webp|thumbnails/frontier/pf-pickup-truck-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-pickup-truck-a.webp');"></div>
+      <div class="model-badge">VEHICLE</div>
       <div class="model-overlay">
-        <div class="model-cat">PROP MODELING</div>
-        <div class="model-name">GAME ASSET <strong>PACK</strong></div>
-        <div class="model-meta">Maya · Substance Painter · ~6.2K tris</div>
+        <div class="model-cat">VEHICLE</div>
+        <div class="model-name">PICKUP <strong>TRUCK</strong></div>
+        <div class="model-meta">31.1K tris · about 5.40 × 2.39 m</div>
         <div class="model-cta">INSPECT →</div>
       </div>
-    </div><!-- /model-card CARD 2 -->
-
-    <!-- CARD 4 -->
+    </div>
     <div class="model-card reveal"
-         data-title="CHARACTER"
-         data-title-b="WIREFRAME"
-         data-num="03 / 03"
-         data-cat="RETOPOLOGY"
-         data-subtitle="ZBrush · Maya"
-         data-desc="Clean edge-flow retopology from high-res ZBrush sculpt. Topology optimized for deformation at joints, ready for rigging and animation."
-         data-software="ZBrush · Maya"
-         data-polycount="~12,000 tris"
-         data-textures="Normal bake from high-poly"
-         data-software2="—">
-      <div class="model-thumb"
-           style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/game-showcase-rough-edition_LISIzno5-ft.png');filter:grayscale(.4);"></div>
-      <div class="model-badge">RETOPOLOGY</div>
+         data-title="UTILITY" data-title-b="VAN" data-num="03 / 12" data-cat="VEHICLE"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Utility van with a roof rack, corrected to real size for the game. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="30,596 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-rusted-van-a.webp|thumbnails/frontier/pf-rusted-van-b.webp|thumbnails/frontier/pf-rusted-van-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-rusted-van-a.webp');"></div>
+      <div class="model-badge">VEHICLE</div>
       <div class="model-overlay">
-        <div class="model-cat">RETOPOLOGY</div>
-        <div class="model-name">CHARACTER <strong>WIREFRAME</strong></div>
-        <div class="model-meta">ZBrush → Maya · ~12K tris</div>
+        <div class="model-cat">VEHICLE</div>
+        <div class="model-name">UTILITY <strong>VAN</strong></div>
+        <div class="model-meta">30.6K tris · about 5.30 × 2.83 m</div>
         <div class="model-cta">INSPECT →</div>
       </div>
-    </div><!-- /model-card CARD 3 -->
+    </div>
+    <div class="model-card reveal"
+         data-title="RUSTED" data-title-b="SEDAN" data-num="04 / 12" data-cat="VEHICLE"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="A stripped, rusted sedan for roadside wrecks. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="31,889 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-rusted-sedan-a.webp|thumbnails/frontier/pf-rusted-sedan-b.webp|thumbnails/frontier/pf-rusted-sedan-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-rusted-sedan-a.webp');"></div>
+      <div class="model-badge">VEHICLE</div>
+      <div class="model-overlay">
+        <div class="model-cat">VEHICLE</div>
+        <div class="model-name">RUSTED <strong>SEDAN</strong></div>
+        <div class="model-meta">31.9K tris · about 4.70 × 1.80 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+    <div class="model-card reveal"
+         data-title="VENDING" data-title-b="MACHINE" data-num="05 / 12" data-cat="WORLD PROP"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Weathered drinks vending machine the player can search. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="11,881 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-vending-machine-a.webp|thumbnails/frontier/pf-vending-machine-b.webp|thumbnails/frontier/pf-vending-machine-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-vending-machine-a.webp');"></div>
+      <div class="model-badge">WORLD PROP</div>
+      <div class="model-overlay">
+        <div class="model-cat">WORLD PROP</div>
+        <div class="model-name">VENDING <strong>MACHINE</strong></div>
+        <div class="model-meta">11.9K tris · about 1.83 × 1.09 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+    <div class="model-card reveal"
+         data-title="PORTABLE" data-title-b="GENERATOR" data-num="06 / 12" data-cat="WORLD PROP"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Portable generator, a power source in the game. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="11,333 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-portable-generator-a.webp|thumbnails/frontier/pf-portable-generator-b.webp|thumbnails/frontier/pf-portable-generator-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-portable-generator-a.webp');"></div>
+      <div class="model-badge">WORLD PROP</div>
+      <div class="model-overlay">
+        <div class="model-cat">WORLD PROP</div>
+        <div class="model-name">PORTABLE <strong>GENERATOR</strong></div>
+        <div class="model-meta">11.3K tris · about 0.68 × 0.68 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+    <div class="model-card reveal"
+         data-title="LARGE" data-title-b="DUMPSTER" data-num="07 / 12" data-cat="WORLD PROP"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Large rusted dumpster for alleys and yards. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="13,930 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-dumpster-a.webp|thumbnails/frontier/pf-dumpster-b.webp|thumbnails/frontier/pf-dumpster-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-dumpster-a.webp');"></div>
+      <div class="model-badge">WORLD PROP</div>
+      <div class="model-overlay">
+        <div class="model-cat">WORLD PROP</div>
+        <div class="model-name">LARGE <strong>DUMPSTER</strong></div>
+        <div class="model-meta">13.9K tris · about 1.95 × 1.13 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+    <div class="model-card reveal"
+         data-title="WATER" data-title-b="TOTE" data-num="08 / 12" data-cat="CONTAINER"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="IBC water tote: a large container in a cage on a pallet. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="13,071 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-water-tote-ibc-a.webp|thumbnails/frontier/pf-water-tote-ibc-b.webp|thumbnails/frontier/pf-water-tote-ibc-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-water-tote-ibc-a.webp');"></div>
+      <div class="model-badge">CONTAINER</div>
+      <div class="model-overlay">
+        <div class="model-cat">CONTAINER</div>
+        <div class="model-name">WATER <strong>TOTE</strong></div>
+        <div class="model-meta">13.1K tris · about 1.16 × 1.15 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+    <div class="model-card reveal"
+         data-title="TOOL" data-title-b="CHEST" data-num="09 / 12" data-cat="CONTAINER"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Wheeled tool chest found in workshops. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="8,410 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-toolbox-wheeled-a.webp|thumbnails/frontier/pf-toolbox-wheeled-b.webp|thumbnails/frontier/pf-toolbox-wheeled-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-toolbox-wheeled-a.webp');"></div>
+      <div class="model-badge">CONTAINER</div>
+      <div class="model-overlay">
+        <div class="model-cat">CONTAINER</div>
+        <div class="model-name">TOOL <strong>CHEST</strong></div>
+        <div class="model-meta">8.4K tris · about 0.78 × 0.54 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+    <div class="model-card reveal"
+         data-title="EXPEDITION" data-title-b="PACK" data-num="10 / 12" data-cat="GEAR"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="The largest backpack: carries the most and weighs the most. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="10,025 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-backpack-expedition-a.webp|thumbnails/frontier/pf-backpack-expedition-b.webp|thumbnails/frontier/pf-backpack-expedition-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-backpack-expedition-a.webp');"></div>
+      <div class="model-badge">GEAR</div>
+      <div class="model-overlay">
+        <div class="model-cat">GEAR</div>
+        <div class="model-name">EXPEDITION <strong>PACK</strong></div>
+        <div class="model-meta">10.0K tris · about 0.78 × 0.72 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+    <div class="model-card reveal"
+         data-title="FUEL" data-title-b="CAN" data-num="11 / 12" data-cat="WORLD PROP"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Jerry can for fuel, textured by me. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="13,265 tris · LOD1 and LOD2 for the game"
+         data-textures="4K base colour · normal · roughness"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-fuel-can-a.webp|thumbnails/frontier/pf-fuel-can-b.webp|thumbnails/frontier/pf-fuel-can-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-fuel-can-a.webp');"></div>
+      <div class="model-badge">WORLD PROP</div>
+      <div class="model-overlay">
+        <div class="model-cat">WORLD PROP</div>
+        <div class="model-name">FUEL <strong>CAN</strong></div>
+        <div class="model-meta">13.3K tris · about 0.47 × 0.36 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
+    <div class="model-card reveal"
+         data-title="STONE" data-title-b="AXE" data-num="12 / 12" data-cat="TOOL"
+         data-subtitle="Project Frontier · game asset in production"
+         data-desc="Stone axe made from the game’s own inventory icon; the first-person grip comes next. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-software="Tripo (AI) · Blender · Unity"
+         data-polycount="10,738 tris"
+         data-textures="4K base colour"
+         data-software2="Blender 5.2 Cycles · Unity URP"
+         data-images="thumbnails/frontier/pf-tool-stone-axe-a.webp|thumbnails/frontier/pf-tool-stone-axe-b.webp|thumbnails/frontier/pf-tool-stone-axe-c.webp" data-labels="Front|Rear|Another angle">
+      <div class="model-thumb" style="background-image:url('thumbnails/frontier/pf-tool-stone-axe-a.webp');"></div>
+      <div class="model-badge">TOOL</div>
+      <div class="model-overlay">
+        <div class="model-cat">TOOL</div>
+        <div class="model-name">STONE <strong>AXE</strong></div>
+        <div class="model-meta">10.7K tris · about 0.45 × 0.41 m</div>
+        <div class="model-cta">INSPECT →</div>
+      </div>
+    </div>
 
   </div><!-- /craft-grid -->
+  <p class="craft-note" style="margin-top:28px;"><a href="https://happysingh3d.com/frontier-assets.html" style="color:inherit;text-decoration:none;">SEE ALL 42 PROJECT FRONTIER ASSETS, EACH FROM THREE ANGLES →</a></p>
 </div><!-- /craft -->
 
 <!-- ── LIGHTBOX ──────────────────────────────────────── -->
@@ -1590,6 +1739,13 @@ let modelCards=[],lbIdx=0;
 
 function buildImgWrap(card){
   const wrap=document.getElementById('lb-img-wrap');
+  const imgs=(card.dataset.images||'').split('|').filter(Boolean);
+  if(imgs.length){
+    const labels=(card.dataset.labels||'').split('|');
+    wrap.innerHTML=`<img class="lb-img" src="${imgs[0]}" alt="${card.dataset.title||''} ${card.dataset.titleB||''} render"/>`+(imgs.length>1?`<div class="lb-views">${imgs.map((u,k)=>`<button class="lb-view${k?'':' on'}" data-src="${u}" aria-label="${labels[k]||'View '+(k+1)}" title="${labels[k]||''}"><img src="${u}" alt=""/></button>`).join('')}</div>`:'');
+    wrap.querySelectorAll('.lb-view').forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();wrap.querySelector('.lb-img').src=b.dataset.src;wrap.querySelectorAll('.lb-view').forEach(x=>x.classList.toggle('on',x===b));}));
+    return;
+  }
   const src=card.querySelector('.model-thumb');
   const bg=src?src.style.backgroundImage:'';
   if(bg && !card.classList.contains('placeholder')){
