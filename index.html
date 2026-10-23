@@ -176,10 +176,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:24px 48px;
 .feat-label-r{font-family:var(--font-m);font-size:8px;letter-spacing:.3em;color:var(--gray);
               display:flex;align-items:center;gap:8px;}
 .live-dot{width:6px;height:6px;background:#C9953A;border-radius:50%;animation:blink 2s ease infinite;}
-.feat-video{width:100%;display:block;max-height:580px;object-fit:cover;}
+.feat-video{display:block;width:min(100%,calc(86vh * 16 / 9));aspect-ratio:16/9;margin:0 auto;object-fit:contain;background:#000;}
 .feat-overlay{
   position:absolute;inset:0;
-  background:linear-gradient(to bottom,transparent 60%,var(--bg) 100%);
+  background:linear-gradient(to bottom,transparent 90%,var(--bg) 100%);
   pointer-events:none;z-index:5;
 }
 
@@ -819,8 +819,8 @@ footer span.hi{color:var(--gray);}
     </div>
     <div>
       <p class="craft-desc reveal">
-        Game assets for Project Frontier, my first-person survival game in Unity. AI-assisted: generated in Tripo,
-        then curated, textured, set to real-world scale and set up for Unity with LODs and PBR maps. Rendered in Blender Cycles.
+        Game assets for Project Frontier, my first-person survival game in Unity. AI-assisted: built with Tripo from my
+        reference sheets, then curated, textured, set to real-world scale and set up for Unity with LODs and PBR maps. Rendered in Blender Cycles.
       </p>
       <p class="craft-note reveal" style="margin-top:20px;">
         CLICK ANY IMAGE TO INSPECT<br>
@@ -838,7 +838,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card wide reveal"
          data-title="WORKSHOP" data-title-b="SHED" data-num="01 / 12" data-cat="BUILDING"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Corrugated workshop shed with a roll-up door: the centre of the maintenance yard. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Corrugated workshop shed with a roll-up door: the centre of the maintenance yard. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="10,748 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -856,7 +856,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="PICKUP" data-title-b="TRUCK" data-num="02 / 12" data-cat="VEHICLE"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Rusted pickup with a roll cage and light bar, one of the wrecks on the roads. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Rusted pickup with a roll cage and light bar, one of the wrecks on the roads. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="31,146 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -874,7 +874,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="UTILITY" data-title-b="VAN" data-num="03 / 12" data-cat="VEHICLE"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Utility van with a roof rack, corrected to real size for the game. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Utility van with a roof rack, corrected to real size for the game. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="30,596 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -892,7 +892,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="RUSTED" data-title-b="SEDAN" data-num="04 / 12" data-cat="VEHICLE"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="A stripped, rusted sedan for roadside wrecks. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="A stripped, rusted sedan for roadside wrecks. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="31,889 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -910,7 +910,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="VENDING" data-title-b="MACHINE" data-num="05 / 12" data-cat="WORLD PROP"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Weathered drinks vending machine the player can search. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Weathered drinks vending machine the player can search. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="11,881 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -928,7 +928,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="PORTABLE" data-title-b="GENERATOR" data-num="06 / 12" data-cat="WORLD PROP"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Portable generator, a power source in the game. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Portable generator, a power source in the game. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="11,333 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -946,7 +946,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="LARGE" data-title-b="DUMPSTER" data-num="07 / 12" data-cat="WORLD PROP"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Large rusted dumpster for alleys and yards. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Large rusted dumpster for alleys and yards. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="13,930 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -964,7 +964,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="WATER" data-title-b="TOTE" data-num="08 / 12" data-cat="CONTAINER"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="IBC water tote: a large container in a cage on a pallet. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="IBC water tote: a large container in a cage on a pallet. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="13,071 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -982,7 +982,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="TOOL" data-title-b="CHEST" data-num="09 / 12" data-cat="CONTAINER"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Wheeled tool chest found in workshops. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Wheeled tool chest found in workshops. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="8,410 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -1000,7 +1000,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="EXPEDITION" data-title-b="PACK" data-num="10 / 12" data-cat="GEAR"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="The largest backpack: carries the most and weighs the most. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="The largest backpack: carries the most and weighs the most. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="10,025 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -1018,7 +1018,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="FUEL" data-title-b="CAN" data-num="11 / 12" data-cat="WORLD PROP"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Jerry can for fuel, textured by me. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Jerry can for fuel, textured by me. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="13,265 tris · LOD1 and LOD2 for the game"
          data-textures="4K base colour · normal · roughness"
@@ -1036,7 +1036,7 @@ footer span.hi{color:var(--gray);}
     <div class="model-card reveal"
          data-title="STONE" data-title-b="AXE" data-num="12 / 12" data-cat="TOOL"
          data-subtitle="Project Frontier · game asset in production"
-         data-desc="Stone axe made from the game’s own inventory icon; the first-person grip comes next. AI-assisted: generated in Tripo, then curated, textured and set up for Unity. Not final art."
+         data-desc="Stone axe made from the game’s own inventory icon; the first-person grip comes next. AI-assisted: built with Tripo from my reference sheets, then curated, textured and set up for Unity by me. Not final art."
          data-software="Tripo (AI) · Blender · Unity"
          data-polycount="10,738 tris"
          data-textures="4K base colour"
@@ -1107,80 +1107,134 @@ footer span.hi{color:var(--gray);}
     <div class="sec-label reveal">/ 02B — RIGGING · SKINNING · ANIMATION · LIGHTING</div>
     <h2 class="sec-title reveal" style="margin-bottom:52px;">IN<br>MOTION.</h2>
 
-    <!-- ═══ RIGGING & SKINNING ═══ -->
+    <!-- ═══ RECENT ANIMATION ═══ -->
     <div class="series-divider">
-      <span class="series-label">RIGGING & SKINNING</span>
+      <span class="series-label">RECENT ANIMATION</span>
       <div class="series-line"></div>
-      <span class="series-count">4 PROJECTS</span>
+      <span class="series-count">7 PARTS</span>
     </div>
 
     <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/H3Lf29ETnzJ/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="rigging">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/character-rig_H3Lf29ETnzJ.png')">
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/Q3o3ImhDRtn/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_01_Q3o3ImhDRtn.png')">
         <iframe allowfullscreen allow="autoplay"></iframe>
         <div class="media-type-badge">▶ VIDEO</div>
         <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
       </div>
       <div class="card-foot">
         <div>
-          <div class="card-cat">RIGGING & SKINNING</div>
-          <div class="card-title">CHARACTER <span class="card-title-g">RIG</span></div>
-          <div class="card-tags">Maya · IK/FK · Skin Weighting · Control Rig</div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 1</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
         </div>
         <div class="card-arr">→</div>
       </div>
     </div>
 
     <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/UQV6U55twKC/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="rigging">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_01_UQV6U55twKC.png')">
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/JfQyXMEa9kn/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_02_JfQyXMEa9kn.png')">
         <iframe allowfullscreen allow="autoplay"></iframe>
         <div class="media-type-badge">▶ VIDEO</div>
         <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
       </div>
       <div class="card-foot">
         <div>
-          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
-          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 1</span></div>
-          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 2</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
         </div>
         <div class="card-arr">→</div>
       </div>
     </div>
 
     <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/I-6mhm7gr_V/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="rigging">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_02_I-6mhm7gr_V.png')">
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/M_Jy8D8xtui/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_03_M_Jy8D8xtui.png')">
         <iframe allowfullscreen allow="autoplay"></iframe>
         <div class="media-type-badge">▶ VIDEO</div>
         <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
       </div>
       <div class="card-foot">
         <div>
-          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
-          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 2</span></div>
-          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 3</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
         </div>
         <div class="card-arr">→</div>
       </div>
     </div>
 
     <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/BCkbiaGXRUd/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="rigging">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_03_BCkbiaGXRUd.png')">
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/I2WXjQ62nHL/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_04_I2WXjQ62nHL.png')">
         <iframe allowfullscreen allow="autoplay"></iframe>
         <div class="media-type-badge">▶ VIDEO</div>
         <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
       </div>
       <div class="card-foot">
         <div>
-          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
-          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 3</span></div>
-          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 4</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/NVAQLzZC8e6/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_05_NVAQLzZC8e6.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 5</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/2wcTfFHNJ6d/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_06_2wcTfFHNJ6d.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 6</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+        </div>
+        <div class="card-arr">→</div>
+      </div>
+    </div>
+
+    <div class="project-card reveal"
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/VxuNUDtvEdJ/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="animation">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_07_VxuNUDtvEdJ.png')">
+        <iframe allowfullscreen allow="autoplay"></iframe>
+        <div class="media-type-badge">▶ VIDEO</div>
+        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
+      </div>
+      <div class="card-foot">
+        <div>
+          <div class="card-cat">CHARACTER ANIMATION</div>
+          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 7</span></div>
+          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
         </div>
         <div class="card-arr">→</div>
       </div>
@@ -1337,134 +1391,80 @@ footer span.hi{color:var(--gray);}
       </div>
     </div>
 
-    <!-- ═══ RECENT ANIMATION ═══ -->
+    <!-- ═══ RIGGING & SKINNING ═══ -->
     <div class="series-divider">
-      <span class="series-label">RECENT ANIMATION</span>
+      <span class="series-label">RIGGING & SKINNING</span>
       <div class="series-line"></div>
-      <span class="series-count">7 PARTS</span>
+      <span class="series-count">4 PROJECTS</span>
     </div>
 
     <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/Q3o3ImhDRtn/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="animation">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_01_Q3o3ImhDRtn.png')">
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/H3Lf29ETnzJ/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="rigging">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/character-rig_H3Lf29ETnzJ.png')">
         <iframe allowfullscreen allow="autoplay"></iframe>
         <div class="media-type-badge">▶ VIDEO</div>
         <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
       </div>
       <div class="card-foot">
         <div>
-          <div class="card-cat">CHARACTER ANIMATION</div>
-          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 1</span></div>
-          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+          <div class="card-cat">RIGGING & SKINNING</div>
+          <div class="card-title">CHARACTER <span class="card-title-g">RIG</span></div>
+          <div class="card-tags">Maya · IK/FK · Skin Weighting · Control Rig</div>
         </div>
         <div class="card-arr">→</div>
       </div>
     </div>
 
     <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/JfQyXMEa9kn/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="animation">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_02_JfQyXMEa9kn.png')">
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/UQV6U55twKC/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="rigging">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_01_UQV6U55twKC.png')">
         <iframe allowfullscreen allow="autoplay"></iframe>
         <div class="media-type-badge">▶ VIDEO</div>
         <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
       </div>
       <div class="card-foot">
         <div>
-          <div class="card-cat">CHARACTER ANIMATION</div>
-          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 2</span></div>
-          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
+          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 1</span></div>
+          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
         </div>
         <div class="card-arr">→</div>
       </div>
     </div>
 
     <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/M_Jy8D8xtui/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="animation">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_03_M_Jy8D8xtui.png')">
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/I-6mhm7gr_V/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="rigging">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_02_I-6mhm7gr_V.png')">
         <iframe allowfullscreen allow="autoplay"></iframe>
         <div class="media-type-badge">▶ VIDEO</div>
         <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
       </div>
       <div class="card-foot">
         <div>
-          <div class="card-cat">CHARACTER ANIMATION</div>
-          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 3</span></div>
-          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
+          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 2</span></div>
+          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
         </div>
         <div class="card-arr">→</div>
       </div>
     </div>
 
     <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/I2WXjQ62nHL/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="animation">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_04_I2WXjQ62nHL.png')">
+         data-embed="https://www-ccv.adobe.io/v1/player/ccv/BCkbiaGXRUd/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
+         data-cat="rigging">
+      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/solution-for-devs_03_BCkbiaGXRUd.png')">
         <iframe allowfullscreen allow="autoplay"></iframe>
         <div class="media-type-badge">▶ VIDEO</div>
         <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
       </div>
       <div class="card-foot">
         <div>
-          <div class="card-cat">CHARACTER ANIMATION</div>
-          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 4</span></div>
-          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
-        </div>
-        <div class="card-arr">→</div>
-      </div>
-    </div>
-
-    <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/NVAQLzZC8e6/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="animation">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_05_NVAQLzZC8e6.png')">
-        <iframe allowfullscreen allow="autoplay"></iframe>
-        <div class="media-type-badge">▶ VIDEO</div>
-        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
-      </div>
-      <div class="card-foot">
-        <div>
-          <div class="card-cat">CHARACTER ANIMATION</div>
-          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 5</span></div>
-          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
-        </div>
-        <div class="card-arr">→</div>
-      </div>
-    </div>
-
-    <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/2wcTfFHNJ6d/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="animation">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_06_2wcTfFHNJ6d.png')">
-        <iframe allowfullscreen allow="autoplay"></iframe>
-        <div class="media-type-badge">▶ VIDEO</div>
-        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
-      </div>
-      <div class="card-foot">
-        <div>
-          <div class="card-cat">CHARACTER ANIMATION</div>
-          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 6</span></div>
-          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
-        </div>
-        <div class="card-arr">→</div>
-      </div>
-    </div>
-
-    <div class="project-card reveal"
-         data-embed="https://www-ccv.adobe.io/v1/player/ccv/VxuNUDtvEdJ/embed?bgcolor=%23191919&lazyLoading=true&api_key=BehancePro2View"
-         data-cat="animation">
-      <div class="card-media" style="background-image:url('https://happysingh3d.github.io/3d-portfolio/thumbnails/animation_07_VxuNUDtvEdJ.png')">
-        <iframe allowfullscreen allow="autoplay"></iframe>
-        <div class="media-type-badge">▶ VIDEO</div>
-        <div class="card-play"><div class="play-btn">▶</div><div class="play-lbl">PLAY</div></div>
-      </div>
-      <div class="card-foot">
-        <div>
-          <div class="card-cat">CHARACTER ANIMATION</div>
-          <div class="card-title">RECENT ANIMATION <span class="card-title-g">— PT. 7</span></div>
-          <div class="card-tags">Maya · Keyframe Animation · Character Performance</div>
+          <div class="card-cat">RIGGING — DEVELOPER TOOLS</div>
+          <div class="card-title">SOLUTION FOR DEVS <span class="card-title-g">— PART 3</span></div>
+          <div class="card-tags">Maya · Python Rigging Tools · Pipeline</div>
         </div>
         <div class="card-arr">→</div>
       </div>
